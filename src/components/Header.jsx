@@ -22,6 +22,7 @@ function Header() {
                 <Link to="/saved-movies" className="header__link">Сохранённые фильмы</Link>
               </nav>
               <Link to="/profile" className="header__link header__link-profile">Аккаунт</Link>
+              <button className="header__burger"></button>
             </>
           )
         }
