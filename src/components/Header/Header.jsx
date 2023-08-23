@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import '../Header/Header.css';
 
 function Header() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  function handleMenuClick() {
+    console.log('click');
+    setIsMenuOpen(!isMenuOpen);
+  }
 
   return (
     <header className="header">
@@ -22,7 +29,7 @@ function Header() {
                 <Link to="/saved-movies" className="header__link">Сохранённые фильмы</Link>
               </nav>
               <Link to="/profile" className="header__link header__link-profile">Аккаунт</Link>
-              <button className="header__burger"></button>
+              <button className="header__burger" onClick={handleMenuClick}></button>
             </>
           )
         }

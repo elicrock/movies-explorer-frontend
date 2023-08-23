@@ -1,13 +1,14 @@
 @import url('./vendor/normalize.css');
 @import url('./vendor/fonts/fonts.css');
-@import url('./blocks/root/root.css');
-@import url('./blocks/page/page.css');
-@import url('./blocks/header/header.css');
-@import url('./blocks/header/__container/header__container.css');
-@import url('./blocks/header/__logo/header__logo.css');
-@import url('./blocks/header/__links/header__links.css');
-@import url('./blocks/header/__links-films/header__links-films.css');
-@import url('./blocks/header/__link/header__link.css');
-@import url('./blocks/header/__link/_btn/header__link_btn.css');
-@import url('./blocks/header/__link-profile/header__link-profile.css');
-@import url('./blocks/header/__burger/header__burger.css');
+
+.root {
+  background-color: #202020;
+  font-family: 'Inter', 'Arial', sans-serif;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+}
