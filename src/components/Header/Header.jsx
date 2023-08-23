@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import '../Header/Header.css';
+import './Header.css';
+import Navigation from "../Navigation/Navigation";
+import BurgerMenu from "../BurgerMenu/BurgerMenu";
 
 function Header() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  function handleMenuClick() {
-    console.log('click');
-    setIsMenuOpen(!isMenuOpen);
-  }
 
   return (
     <header className="header">
@@ -18,18 +14,14 @@ function Header() {
         <Link to="/" className="header__logo" />
         {
           isLoggedIn ? (
-            <nav className="header__links">
-              <Link to="/signup" className="header__link">Регистрация</Link>
-              <Link to="/signin" className="header__link header__link_btn">Войти</Link>
-            </nav>
+            <ul className="header__list">
+              <li><Link to="/signup" className="header__item">Регистрация</Link></li>
+              <li><Link to="/signin" className="header__item header__item_btn">Войти</Link></li>
+            </ul>
           ) : (
             <>
-              <nav className="header__links header__links-films">
-                <Link to="/movies" className="header__link">Фильмы</Link>
-                <Link to="/saved-movies" className="header__link">Сохранённые фильмы</Link>
-              </nav>
-              <Link to="/profile" className="header__link header__link-profile">Аккаунт</Link>
-              <button className="header__burger" onClick={handleMenuClick}></button>
+              <Navigation />
+              <BurgerMenu />
             </>
           )
         }
