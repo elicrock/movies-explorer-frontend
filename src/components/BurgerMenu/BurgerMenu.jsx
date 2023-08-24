@@ -11,24 +11,23 @@ function BurgerMenu() {
 
   return (
     <>
-      {
-        !isMenuOpen ?
+      {!isMenuOpen &&
         <button className="header__burger-btn" onClick={handleMenuClick}></button>
-        :
-          <>
-            <div className="burger-bg"></div>
-            <div className="burger-menu">
-              <button className="burger-menu__close-btn" onClick={handleMenuClick}></button>
-              <nav className="burger-menu__links">
-                <Link to="/saved-movies" className="burger-menu__link">Главная</Link>
-                <Link to="/saved-movies" className="burger-menu__link">Фильмы</Link>
-                <Link to="/saved-movies" className="burger-menu__link">Сохранённые фильмы</Link>
-              </nav>
-              <Link to="/profile" className="burger-menu__link burger-menu__link-profile">Аккаунт</Link>
-            </div>
-          </>
       }
 
+      {isMenuOpen && (
+        <div className={`burger-menu__overlay ${isMenuOpen ? 'burger-menu__overlay_active' : ''}`} onClick={handleMenuClick}>
+        <button className="burger-menu__close-btn" onClick={handleMenuClick} />
+          <div className="burger-menu__content">
+            <nav className="burger-menu__links">
+              <Link to="/" className="burger-menu__link">Главная</Link>
+              <Link to="/movies" className="burger-menu__link">Фильмы</Link>
+              <Link to="/saved-movies" className="burger-menu__link">Сохранённые фильмы</Link>
+            </nav>
+            <Link to="/profile" className="burger-menu__profile">Аккаунт</Link>
+          </div>
+        </div>
+      )}
     </>
   )
 }
