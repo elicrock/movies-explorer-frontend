@@ -1,0 +1,24 @@
+.about-project {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 110px 70px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 70px;
+}
+
+.about-project__title {
+  margin: 0;
+  color: #FFF;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.88px;
+  border-bottom: 1px solid #DADADA;
+  padding-bottom: 23px;
+}
+
+.about-project__description {
+  display: flex;
+}
