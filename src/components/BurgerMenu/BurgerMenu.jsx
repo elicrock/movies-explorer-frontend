@@ -12,13 +12,13 @@ function BurgerMenu() {
   return (
     <>
       {!isMenuOpen &&
-        <button className="header__burger-btn" onClick={handleMenuClick}></button>
+        <button className="header__burger-btn" onClick={(handleMenuClick)}></button>
       }
 
       {isMenuOpen && (
         <div className={`burger-menu__overlay ${isMenuOpen ? 'burger-menu__overlay_active' : ''}`} onClick={handleMenuClick}>
         <button className="burger-menu__close-btn" onClick={handleMenuClick} />
-          <div className="burger-menu__content">
+          <div className="burger-menu__content" onClick={(e) => e.stopPropagation()}>
             <nav className="burger-menu__links">
               <Link to="/" className="burger-menu__link">Главная</Link>
               <Link to="/movies" className="burger-menu__link">Фильмы</Link>
