@@ -81,7 +81,7 @@
   .promo__container {
     background-size: calc((100vw - 320px)/(768 - 320) * (310 - 210) + 210px) calc((100vw - 320px)/(768 - 320) * (304 - 206) + 206px);
     background-position: center calc((100vw - 320px)/(768 - 320) * (140 - 70) + 70px);
-    padding: calc((100vw - 320px)/(768 - 320) * (492 - 320) + 320px) calc((100vw - 320px)/(768 - 320) * (44 - 10) + 10px) calc((100vw - 320px)/(768 - 320) * (76 - 30) + 30px);
+    padding: calc((100vw - 320px)/(768 - 320) * (497 - 320) + 320px) calc((100vw - 320px)/(768 - 320) * (44 - 10) + 10px) calc((100vw - 320px)/(768 - 320) * (76 - 30) + 30px);
     gap: calc((100vw - 320px)/(768 - 320) * (92 - 80) + 80px);
     align-items: center;
   }
@@ -97,7 +97,7 @@
     font-size: calc((100vw - 320px)/(768 - 320) * (40 - 30) + 30px);
     line-height: calc((100vw - 320px)/(768 - 320) * (50 - 38) + 38px);
     text-align: center;
-    letter-spacing: -1.2px;
+    /* letter-spacing: -1.2px; */
   }
 
   .promo__subtitle {

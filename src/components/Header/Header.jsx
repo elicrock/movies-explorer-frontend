@@ -16,7 +16,7 @@ function Header() {
       <div className="header__container">
         <Link to="/" className="header__logo" />
         {
-          !isLoggedIn ? (
+          isLoggedIn ? (
             <ul className="header__list">
               <li><Link to="/signup" className="header__item">Регистрация</Link></li>
               <li><Link to="/signin" className="header__item header__item_btn">Войти</Link></li>

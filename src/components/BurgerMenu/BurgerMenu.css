@@ -21,6 +21,14 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.2s;
+}
+
+.burger-menu__overlay_active {
+  visibility: visible;
+  opacity: 1;
 }
 
 .burger-menu__content {
@@ -40,6 +48,7 @@
 }
 
 .burger-menu__overlay_active .burger-menu__content {
+  visibility: visible;
   transform: translateX(0);
 }
 
@@ -76,6 +85,11 @@
 
 .burger-menu__link:hover {
   opacity: 0.7;
+}
+
+.burger-menu__link_active {
+  border-bottom: 2px solid #fff;
+  margin-bottom: 4px;
 }
 
 .burger-menu__profile {

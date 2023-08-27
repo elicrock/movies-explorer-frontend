@@ -13,12 +13,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 70px;
+  padding: 18px 70px;
 }
 
 .header__logo {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   background: url('../../images/logo.svg') center/cover no-repeat;
   text-decoration: none;
   flex-shrink: 0;
@@ -73,6 +73,19 @@
 @media screen and (max-width: 768px) {
   .header__container {
     padding: 15px calc((100vw - 320px)/(768 - 320) * (30 - 14) + 14px);
+  }
+
+  .header__list {
+    gap: calc((100vw - 320px)/(768 - 320) * (30 - 14) + 14px);
+  }
+
+  .header__item {
+    font-size: calc((100vw - 320px)/(768 - 320) * (12 - 10) + 10px);
+  }
+
+  .header__item_btn {
+    width: calc((100vw - 320px)/(768 - 320) * (76 - 54) + 54px);
+    height: calc((100vw - 320px)/(768 - 320) * (32 - 26) + 26px);
   }
 }
 
