@@ -125,6 +125,11 @@
 @media screen and (max-width: 768px) {
   .header__burger-btn {
     display: flex;
+    visibility: visible;
+  }
+
+  .header__burger-btn_hide {
+    visibility: hidden;
   }
 
   .burger-menu__content {
