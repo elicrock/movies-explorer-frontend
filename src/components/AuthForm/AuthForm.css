@@ -31,7 +31,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  min-height: 413px;
+  min-height: 400px;
 }
 
 .auth__inputs {
@@ -134,14 +134,12 @@
 }
 
 @media screen and (max-width: 768px) {
-  .auth__button {
-    font-size: calc((100vw - 320px)/(768 - 320) * (14 - 12) + 12px);
+  .auth {
+    padding: calc((100vw - 320px)/(768 - 320) * (70 - 56) + 56px) 30px calc((100vw - 320px)/(768 - 320) * (70 - 30) + 30px);
   }
 
-  .auth__text-page {
-    font-size: calc((100vw - 320px)/(768 - 320) * (14 - 12) + 12px);
-  }
-
+  .auth__button,
+  .auth__text-page,
   .auth__link {
     font-size: calc((100vw - 320px)/(768 - 320) * (14 - 12) + 12px);
   }
@@ -151,17 +149,19 @@
   .auth {
     align-items: center;
   }
+
+  .auth__logo {
+    margin-bottom: 10px;
+  }
+
+  .auth__title {
+    margin-bottom: 40px;
+  }
 }
 
 @media screen and (max-width: 320px) {
-  .auth__button {
-    font-size: 12px;
-  }
-
-  .auth__text-page {
-    font-size: 12px;
-  }
-
+  .auth__button,
+  .auth__text-page,
   .auth__link {
     font-size: 12px;
   }
