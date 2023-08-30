@@ -92,20 +92,21 @@
   transition: opacity 0.2s;
 }
 
+.profile__button-edit:hover {
+  opacity: 0.8;
+}
+
 .profile__button-logout {
-  color: #EE3465;
+  color: rgba(238, 52, 101, 1);
   font-size: 13px;
   font-weight: 500;
   line-height: normal;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
+  text-decoration: none;
+  transition: color 0.2s;
 }
 
-.profile__button-edit:hover,
 .profile__button-logout:hover {
-  opacity: 0.8;
+  color: rgba(238, 52, 101, 0.7);;
 }
 
 @media screen and (max-width: 768px) {
