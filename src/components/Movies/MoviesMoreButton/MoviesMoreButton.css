@@ -1,0 +1,34 @@
+.moives__more {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 50px 0 80px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+.moives__more-btn {
+  width: 320px;
+  height: 36px;
+  flex-shrink: 0;
+  background: #202020;
+  border-radius: 6px;
+  border: 1px solid #424242;
+  color: #FFF;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.moives__more-btn:hover {
+  opacity: 0.8;
+}
+
+@media screen and (max-width: 768px) {
+  .moives__more-btn {
+    width: calc((100vw - 320px)/(768 - 320) * (320 - 240) + 240px);
+  }
+}
