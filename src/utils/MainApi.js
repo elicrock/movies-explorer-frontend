@@ -93,8 +93,11 @@ export const authorize = (email, password) => {
 }
 
 export const logout = () => {
-  return request(`${BASE_URL}/logout`, {
+  return request(`${BASE_URL}/signout`, {
     method: 'POST',
     credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   })
 }

@@ -4,12 +4,12 @@ import Header from '../Header/Header';
 import SearchForm from '../Movies/SearchForm/SearchForm';
 import MoviesCardList from '../Movies/MoviesCardList/MoviesCardList';
 import MoviesCard from '../Movies/MoviesCard/MoviesCard';
-import Footer from "../Footer/Footer";
+import Footer from '../Footer/Footer';
 
-function SavedMovies() {
+function SavedMovies({ isLoggedIn }) {
   return (
     <>
-      <Header />
+      <Header isLoggedIn={isLoggedIn} />
       <main className="content">
         <SearchForm />
         <MoviesCardList>

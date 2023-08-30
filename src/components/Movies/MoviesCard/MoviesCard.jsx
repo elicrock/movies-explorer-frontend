@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 import './MoviesCard.css';
 import MovieImg from '../../../images/movie.png';
 

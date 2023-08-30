@@ -5,12 +5,12 @@ import SearchForm from './SearchForm/SearchForm';
 import MoviesCardList from './MoviesCardList/MoviesCardList';
 import MoviesCard from './MoviesCard/MoviesCard';
 import MoviesMoreButton from './MoviesMoreButton/MoviesMoreButton';
-import Footer from "../Footer/Footer";
+import Footer from '../Footer/Footer';
 
-function Movies() {
+function Movies({ isLoggedIn }) {
   return (
     <>
-      <Header />
+      <Header isLoggedIn={isLoggedIn} />
       <main className="content">
         <SearchForm />
         <MoviesCardList>
