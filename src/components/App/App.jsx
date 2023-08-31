@@ -47,9 +47,8 @@ function App() {
 
   function onRegister({name, email, password}) {
     mainApi.register(name, email, password)
-      .then(() => {
-        console.log('Good');
-        navigate('/signin', {replace: true});
+      .then((res) => {
+        onLogin({ email, password });
       })
       .catch((err) => {
         console.error('При регистрации пользователя произошла ошибка.', err);
@@ -64,7 +63,8 @@ function App() {
         navigate('/movies', {replace: true});
       })
       .catch((err) => {
-        console.error('При логине пользователя произошла ошибка.', err);
+        console.log(err);
+        // console.error('При логине пользователя произошла ошибка.', err);
       })
   };
 

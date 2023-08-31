@@ -7,7 +7,7 @@ function AuthForm({ title, nameForm, btnText, children, textPage, linkPage, text
     <section className="auth">
       <Link to="/" className="auth__logo" />
       <h1 className="auth__title">{title}</h1>
-      <form className="auth__form" name={nameForm} onSubmit={onSubmit} >
+      <form className="auth__form" name={nameForm} onSubmit={onSubmit} noValidate>
         {children &&
           <div className="auth__inputs">
             {children}

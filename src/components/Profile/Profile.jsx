@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Profile.css';
 import Header from '../Header/Header';
@@ -10,17 +10,26 @@ function Profile({ isLoggedIn, signOut, setCurrentUser }) {
   const currentUser = useContext(CurrentUserContext);
   const { values, handleChange, errors, isValid, setValues, resetForm } = useFormAndValidation();
 
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  function handleSubmitClick() {
+    setIsSubmit(!isSubmit);
+  }
+
   const handleSubmit = (e) => {
+    setIsLoading(true);
     e.preventDefault();
     updateUserInfo(values.name, values.email)
       .then((data) => {
-        setCurrentUser({
-          name: data.name,
-          email: data.email
-        });
+        setCurrentUser(data);
+        setIsSubmit(false);
       })
       .catch((err) => {
-
+        console.error(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       })
   };
 
@@ -53,8 +62,17 @@ function Profile({ isLoggedIn, signOut, setCurrentUser }) {
             <span className={`profile__input-error email-error ${errors.email ? 'profile__input-error_active' : ''}`}>{errors.email}</span>
           </div>
           <div className="profile__buttons-container">
-            <button type="submit" className="profile__button-edit" disabled={!isValid}>Редактировать</button>
-            <Link to="/" className="profile__button-logout" onClick={signOut}>Выйти из аккаунта</Link>
+            {isSubmit &&
+              <button type="submit" className={`profile__button-save ${!isValid ? 'profile__button-save_disabled' : ''}`} disabled={!isValid}>
+                {isLoading ? 'Сохранение' : 'Сохранить'}
+              </button>
+            }
+            {!isSubmit &&
+              <>
+                <button type="submit" className="profile__button-edit" onClick={handleSubmitClick}>Редактировать</button>
+                <Link to="/" className="profile__button-logout" onClick={signOut}>Выйти из аккаунта</Link>
+              </>
+            }
           </div>
         </form>
       </section>
