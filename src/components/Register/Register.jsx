@@ -3,7 +3,7 @@ import AuthForm from '../AuthForm/AuthForm';
 import './Register.css'
 import { useFormAndValidation } from '../../hooks/useFormAndValidation';
 
-function Register({ onRegister }) {
+function Register({ onRegister, isSubmitError }) {
   const { values, handleChange, errors, isValid, resetForm } = useFormAndValidation();
 
   const handleSubmit = (e) => {
@@ -25,6 +25,7 @@ function Register({ onRegister }) {
       textLink="Войти"
       onSubmit={handleSubmit}
       isValid={isValid}
+      isSubmitError={isSubmitError}
     >
       <label className="auth__label">
         Имя

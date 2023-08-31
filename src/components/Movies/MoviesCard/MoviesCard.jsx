@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import './MoviesCard.css';
-import MovieImg from '../../../images/movie.png';
+import { BASE_URL } from '../../../utils/MoviesApi';
+import { formatDuration } from '../../../utils/durationFormat';
 
-function MoviesCard() {
+function MoviesCard({ movie }) {
   const [isSaved, setIsSaved] = useState(false);
   const location = useLocation();
 
@@ -15,11 +16,11 @@ function MoviesCard() {
 
   return (
     <li className="movie">
-      <img src={MovieImg} alt="Изображение фильма" className="movie__img" />
+      <img src={`${BASE_URL}${movie.image.url}`} alt={`Постер фильма ${movie.nameRU}`} className="movie__img" />
       <div className="movie__container">
         <div className="movie__caption">
-          <h2 className="movie__title">33 слова о дизайне</h2>
-          <p className="movie__duration">1ч 42м</p>
+          <h2 className="movie__title">{movie.nameRU}</h2>
+          <p className="movie__duration">{formatDuration(movie.duration)}</p>
         </div>
         <button type="button" className={`movie__save-btn ${isSaved ? 'movie__save-btn_active' : ''} ${changeButtonBg ? 'movie__delete-btn' : ''}`} onClick={handleSaveClick} />
       </div>

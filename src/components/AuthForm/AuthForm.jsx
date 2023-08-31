@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './AuthForm.css';
 
-function AuthForm({ title, nameForm, btnText, children, textPage, linkPage, textLink, onSubmit, isValid }) {
+function AuthForm({ title, nameForm, btnText, children, textPage, linkPage, textLink, onSubmit, isValid, isSubmitError }) {
   return (
     <section className="auth">
       <Link to="/" className="auth__logo" />
@@ -14,6 +14,7 @@ function AuthForm({ title, nameForm, btnText, children, textPage, linkPage, text
           </div>
         }
         <div className="auth__button-container">
+          <span className={`auth__submit-error ${isSubmitError ? 'auth__submit-error_active' : ''}`}>{isSubmitError}</span>
           <button type="submit" className={`auth__button ${!isValid ? 'auth__button_disabled' : ''}`} disabled={!isValid}>{btnText}</button>
           <p className="auth__text-page">{textPage} <Link to={linkPage} className="auth__link">{textLink}</Link></p>
         </div>

@@ -1,11 +1,19 @@
 import React from 'react';
 import './MoviesCardList.css';
+import MoviesCard from '../MoviesCard/MoviesCard';
 
-function MoviesCardList({ children }) {
+function MoviesCardList({ allMovies }) {
   return (
     <section className="movies">
       <ul className="movies__list">
-        { children }
+        {
+          allMovies.map((movie) => (
+            <MoviesCard
+              key={movie.id}
+              movie={movie}
+            />
+          ))
+        }
       </ul>
     </section>
   )

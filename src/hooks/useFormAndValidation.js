@@ -26,6 +26,7 @@ export function useFormAndValidation() {
     } else {
       setErrors({ ...errors, [name]: e.target.validationMessage });
     }
+    // setErrors({ ...errors, [name]: e.target.validationMessage });
     setIsValid(e.target.closest('form').checkValidity());
   };
 

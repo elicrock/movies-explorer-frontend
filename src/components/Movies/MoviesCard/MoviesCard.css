@@ -9,6 +9,7 @@
 
 .movie__img {
   width: 100%;
+  aspect-ratio: 1/0.56;
   cursor: pointer;
   object-fit: cover;
   background: transparent;

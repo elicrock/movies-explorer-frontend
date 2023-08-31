@@ -19,7 +19,7 @@ function App() {
 
   const [currentUser, setCurrentUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [isSubmitError, setIsSubmitError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -51,6 +51,16 @@ function App() {
         onLogin({ email, password });
       })
       .catch((err) => {
+        if (err.status === 409) {
+          setIsSubmitError('Пользователь с таким email уже существует!');
+        } else if (err.status === 500) {
+          setIsSubmitError('На сервере произошла ошибка!');
+        } else {
+          setIsSubmitError('При регистрации пользователя произошла ошибка!');
+        }
+        setTimeout(() => {
+          setIsSubmitError('');
+        }, 2000)
         console.error('При регистрации пользователя произошла ошибка.', err);
       })
   };
@@ -63,8 +73,18 @@ function App() {
         navigate('/movies', {replace: true});
       })
       .catch((err) => {
-        console.log(err);
-        // console.error('При логине пользователя произошла ошибка.', err);
+        if (err.status === 401) {
+          setIsSubmitError('Вы ввели неправильный логин или пароль!');
+        } else if (err.status === 400) {
+          setIsSubmitError('При авторизации произошла ошибка. Токен не передан или передан не в том формате!');
+        } else if (err.status === 500) {
+          setIsSubmitError('На сервере произошла ошибка!');
+        } else {
+          setIsSubmitError('При авторизации произошла ошибка. Переданный токен некорректен!');
+        }
+        setTimeout(() => {
+          setIsSubmitError('');
+        }, 2000)
       })
   };
 
@@ -96,10 +116,17 @@ function App() {
               <ProtectedRoute element={SavedMovies} isLoggedIn={isLoggedIn} />
             }/>
             <Route path="/profile" element={
-              <ProtectedRoute element={Profile} isLoggedIn={isLoggedIn} signOut={signOut} setCurrentUser={setCurrentUser} />
+              <ProtectedRoute
+                element={Profile}
+                isLoggedIn={isLoggedIn}
+                signOut={signOut}
+                setCurrentUser={setCurrentUser}
+                isSubmitError={isSubmitError}
+                setIsSubmitError={setIsSubmitError}
+              />
             }/>
-            <Route path="/signup" element={<Register onRegister={onRegister} />}/>
-            <Route path="/signin" element={<Login onLogin={onLogin} />}/>
+            <Route path="/signup" element={<Register onRegister={onRegister} isSubmitError={isSubmitError} />}/>
+            <Route path="/signin" element={<Login onLogin={onLogin} isSubmitError={isSubmitError} />}/>
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </CurrentUserContext.Provider>

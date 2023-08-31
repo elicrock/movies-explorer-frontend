@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://api.nomoreparties.co/beatfilm-movies';
+export const BASE_URL = 'https://api.nomoreparties.co';
 
 function resStatus(res) {
   if (res.ok) {
@@ -12,9 +12,8 @@ function request(url, options) {
 }
 
 export const getAllMovies = () => {
-  return request(`${BASE_URL}`, {
+  return request(`${BASE_URL}/beatfilm-movies`, {
     method: 'GET',
-    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },

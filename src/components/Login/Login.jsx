@@ -3,7 +3,7 @@ import AuthForm from '../AuthForm/AuthForm';
 import './Login.css';
 import { useFormAndValidation } from '../../hooks/useFormAndValidation';
 
-function Login({ onLogin }) {
+function Login({ onLogin, isSubmitError }) {
   const { values, handleChange, errors, isValid, resetForm } = useFormAndValidation();
 
   const handleSubmit = (e) => {
@@ -25,6 +25,7 @@ function Login({ onLogin }) {
       textLink="Регистрация"
       onSubmit={handleSubmit}
       isValid={isValid}
+      isSubmitError={isSubmitError}
     >
       <label className="auth__label">
         E-mail

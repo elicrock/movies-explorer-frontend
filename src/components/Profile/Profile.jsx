@@ -6,7 +6,7 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { useFormAndValidation } from '../../hooks/useFormAndValidation';
 import { updateUserInfo } from '../../utils/MainApi';
 
-function Profile({ isLoggedIn, signOut, setCurrentUser }) {
+function Profile({ isLoggedIn, signOut, setCurrentUser, isSubmitError, setIsSubmitError }) {
   const currentUser = useContext(CurrentUserContext);
   const { values, handleChange, errors, isValid, setValues, resetForm } = useFormAndValidation();
 
@@ -26,7 +26,16 @@ function Profile({ isLoggedIn, signOut, setCurrentUser }) {
         setIsSubmit(false);
       })
       .catch((err) => {
-        console.error(err);
+        if (err.status === 409) {
+          setIsSubmitError('Пользователь с таким email уже существует!');
+        } else if (err.status === 500) {
+          setIsSubmitError('На сервере произошла ошибка!');
+        } else {
+          setIsSubmitError('При обновлении профиля произошла ошибка!');
+        }
+        setTimeout(() => {
+          setIsSubmitError('');
+        }, 2000)
       })
       .finally(() => {
         setIsLoading(false);
@@ -62,6 +71,7 @@ function Profile({ isLoggedIn, signOut, setCurrentUser }) {
             <span className={`profile__input-error email-error ${errors.email ? 'profile__input-error_active' : ''}`}>{errors.email}</span>
           </div>
           <div className="profile__buttons-container">
+            <span className={`profile__submit-error ${isSubmitError ? 'profile__submit-error_active' : ''}`}>{isSubmitError}</span>
             {isSubmit &&
               <button type="submit" className={`profile__button-save ${!isValid ? 'profile__button-save_disabled' : ''}`} disabled={!isValid}>
                 {isLoading ? 'Сохранение' : 'Сохранить'}
