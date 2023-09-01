@@ -2,12 +2,12 @@ import React from 'react';
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
-function MoviesCardList({ allMovies }) {
+function MoviesCardList({ searchResults }) {
   return (
     <section className="movies">
       <ul className="movies__list">
         {
-          allMovies.map((movie) => (
+          searchResults.map((movie) => (
             <MoviesCard
               key={movie.id}
               movie={movie}

@@ -9,6 +9,10 @@ import { getAllMovies } from '../../utils/MoviesApi';
 
 function Movies({ isLoggedIn }) {
   const [allMovies, setAllMovies] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -22,12 +26,38 @@ function Movies({ isLoggedIn }) {
     }
   }, [isLoggedIn]);
 
+  const handleSearchMovies = () => {
+    if (!searchQuery) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    const filteredMovies = allMovies.filter((movie) =>
+    movie.nameEN.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    movie.nameRU.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+    setSearchResults(filteredMovies);
+
+    setIsLoading(false);
+
+    console.log(searchResults);
+
+  };
+
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
       <main className="content">
-        <SearchForm />
-        <MoviesCardList allMovies={allMovies} />
+        <SearchForm
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onSearch={handleSearchMovies}
+        />
+        {isLoading && <div>Идет загрузка...</div>}
+        {error && <div>{error}</div>}
+        <MoviesCardList searchResults={searchResults} />
         <MoviesMoreButton />
       </main>
       <Footer />
