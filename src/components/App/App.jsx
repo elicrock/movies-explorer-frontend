@@ -11,7 +11,8 @@ import PageNotFound from '../PageNotFound/PageNotFound';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import Preloader from '../Preloader/Preloader';
-import * as mainApi from '../../utils/MainApi';
+import { getUserInfo, register, authorize } from '../../utils/MainApi';
+import { handleError } from '../../utils/handleError';
 
 function App() {
 
@@ -27,7 +28,7 @@ function App() {
   }, []);
 
   function checkToken() {
-    mainApi.getUserInfo()
+    getUserInfo()
       .then((res) => {
         if (res) {
           setIsLoggedIn(true);
@@ -46,58 +47,25 @@ function App() {
   };
 
   function onRegister({name, email, password}) {
-    mainApi.register(name, email, password)
+    register(name, email, password)
       .then((res) => {
         onLogin({ email, password });
       })
       .catch((err) => {
-        if (err.status === 409) {
-          setIsSubmitError('Пользователь с таким email уже существует!');
-        } else if (err.status === 500) {
-          setIsSubmitError('На сервере произошла ошибка!');
-        } else {
-          setIsSubmitError('При регистрации пользователя произошла ошибка!');
-        }
-        setTimeout(() => {
-          setIsSubmitError('');
-        }, 2000)
+        handleError(err, setIsSubmitError);
         console.error('При регистрации пользователя произошла ошибка.', err);
       })
   };
 
   function onLogin({ email, password }) {
-    mainApi.authorize(email, password)
+    authorize(email, password)
       .then((res) => {
         setIsLoggedIn(true);
         setCurrentUser(res.user);
         navigate('/movies', {replace: true});
       })
       .catch((err) => {
-        if (err.status === 401) {
-          setIsSubmitError('Вы ввели неправильный логин или пароль!');
-        } else if (err.status === 400) {
-          setIsSubmitError('При авторизации произошла ошибка. Токен не передан или передан не в том формате!');
-        } else if (err.status === 500) {
-          setIsSubmitError('На сервере произошла ошибка!');
-        } else {
-          setIsSubmitError('При авторизации произошла ошибка. Переданный токен некорректен!');
-        }
-        setTimeout(() => {
-          setIsSubmitError('');
-        }, 2000)
-      })
-  };
-
-  function signOut() {
-    mainApi.logout()
-      .then((res) => {
-        if (res) {
-          setIsLoggedIn(false);
-          setCurrentUser({});
-        }
-      })
-      .catch((err) => {
-        console.error('Произошла ошибка выполнения запроса:', err);
+        handleError(err, setIsSubmitError, 'login');
       })
   };
 
@@ -119,7 +87,7 @@ function App() {
               <ProtectedRoute
                 element={Profile}
                 isLoggedIn={isLoggedIn}
-                signOut={signOut}
+                setIsLoggedIn={setIsLoggedIn}
                 setCurrentUser={setCurrentUser}
                 isSubmitError={isSubmitError}
                 setIsSubmitError={setIsSubmitError}

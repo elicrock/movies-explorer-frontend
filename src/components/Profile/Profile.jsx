@@ -4,11 +4,12 @@ import './Profile.css';
 import Header from '../Header/Header';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { useFormAndValidation } from '../../hooks/useFormAndValidation';
-import { updateUserInfo } from '../../utils/MainApi';
+import { updateUserInfo, logout } from '../../utils/MainApi';
+import { handleError } from '../../utils/handleError';
 
-function Profile({ isLoggedIn, signOut, setCurrentUser, isSubmitError, setIsSubmitError }) {
+function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, setIsSubmitError }) {
   const currentUser = useContext(CurrentUserContext);
-  const { values, handleChange, errors, isValid, setValues, resetForm } = useFormAndValidation();
+  const { values, handleChange, errors, isValid, setValues, resetForm, isButtonDisable } = useFormAndValidation();
 
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +53,19 @@ function Profile({ isLoggedIn, signOut, setCurrentUser, isSubmitError, setIsSubm
     }
   }, [currentUser, setValues, resetForm]);
 
+  const signOut = () => {
+    logout()
+      .then((res) => {
+        if (res) {
+          setIsLoggedIn(false);
+          setCurrentUser({});
+        }
+      })
+      .catch((err) => {
+        console.error('Произошла ошибка выполнения запроса:', err);
+      })
+  };
+
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
@@ -73,7 +87,7 @@ function Profile({ isLoggedIn, signOut, setCurrentUser, isSubmitError, setIsSubm
           <div className="profile__buttons-container">
             <span className={`profile__submit-error ${isSubmitError ? 'profile__submit-error_active' : ''}`}>{isSubmitError}</span>
             {isSubmit &&
-              <button type="submit" className={`profile__button-save ${!isValid ? 'profile__button-save_disabled' : ''}`} disabled={!isValid}>
+              <button type="submit" className={`profile__button-save ${!isValid || isButtonDisable ? 'profile__button-save_disabled' : ''}`} disabled={!isValid || isButtonDisable}>
                 {isLoading ? 'Сохранение' : 'Сохранить'}
               </button>
             }

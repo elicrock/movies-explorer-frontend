@@ -4,7 +4,7 @@ import './Login.css';
 import { useFormAndValidation } from '../../hooks/useFormAndValidation';
 
 function Login({ onLogin, isSubmitError }) {
-  const { values, handleChange, errors, isValid, resetForm } = useFormAndValidation();
+  const { values, handleChange, errors, isValid, resetForm, isButtonDisable } = useFormAndValidation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,6 +26,7 @@ function Login({ onLogin, isSubmitError }) {
       onSubmit={handleSubmit}
       isValid={isValid}
       isSubmitError={isSubmitError}
+      isButtonDisable={isButtonDisable}
     >
       <label className="auth__label">
         E-mail
