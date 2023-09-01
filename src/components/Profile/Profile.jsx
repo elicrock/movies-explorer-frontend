@@ -27,16 +27,7 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
         setIsSubmit(false);
       })
       .catch((err) => {
-        if (err.status === 409) {
-          setIsSubmitError('Пользователь с таким email уже существует!');
-        } else if (err.status === 500) {
-          setIsSubmitError('На сервере произошла ошибка!');
-        } else {
-          setIsSubmitError('При обновлении профиля произошла ошибка!');
-        }
-        setTimeout(() => {
-          setIsSubmitError('');
-        }, 2000)
+        handleError(err, setIsSubmitError);
       })
       .finally(() => {
         setIsLoading(false);
