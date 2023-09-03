@@ -18,7 +18,7 @@ function Register({ onRegister, isSubmitError }) {
   return (
     <AuthForm
       title="Добро пожаловать!"
-      nameForm="register"
+      nameForm="registerForm"
       btnText="Зарегистрироваться"
       textPage="Уже зарегистрированы?"
       linkPage="/signin"

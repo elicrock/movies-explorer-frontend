@@ -18,7 +18,7 @@ function Login({ onLogin, isSubmitError }) {
   return (
     <AuthForm
       title="Рады видеть!"
-      nameForm="login"
+      nameForm="loginForm"
       btnText="Войти"
       textPage="Ещё не зарегистрированы?"
       linkPage="/signup"

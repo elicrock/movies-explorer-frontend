@@ -62,7 +62,7 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
       <Header isLoggedIn={isLoggedIn} />
       <section className="profile">
         <h1 className="profile__title">Привет, {currentUser.name}!</h1>
-        <form className="profile__form" name="profile" onSubmit={handleSubmit} noValidate>
+        <form className="profile__form" name="profileForm" onSubmit={handleSubmit} noValidate>
           <div className="profile__inputs">
             <label className="profile__label">
               Имя

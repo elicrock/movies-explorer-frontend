@@ -8,23 +8,28 @@ import Footer from '../Footer/Footer';
 import { getAllMovies } from '../../utils/MoviesApi';
 
 function Movies({ isLoggedIn }) {
-  const [allMovies, setAllMovies] = useState([]);
+  const [movies, setMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  // const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     getAllMovies()
+  //       .then((data) => {
+  //         setAllMovies(data);
+  //         console.log(allMovies);
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //       })
+  //   }
+  // }, [isLoggedIn]);
+
   useEffect(() => {
-    if (isLoggedIn) {
-      getAllMovies()
-        .then((data) => {
-          setAllMovies(data);
-        })
-        .catch((err) => {
-          console.error(err);
-        })
-    }
-  }, [isLoggedIn]);
+    handleSearchMovies();
+  }, []);
 
   const handleSearchMovies = () => {
     if (!searchQuery) {
@@ -32,17 +37,25 @@ function Movies({ isLoggedIn }) {
     }
 
     setIsLoading(true);
-
-    const filteredMovies = allMovies.filter((movie) =>
-    movie.nameEN.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    movie.nameRU.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-    setSearchResults(filteredMovies);
-
-    setIsLoading(false);
-
-    console.log(searchResults);
+    getAllMovies()
+      .then((data) => {
+        if (data.length === 0) {
+          setError('Ничего не найдено');
+          setMovies([]);
+        } else {
+          const filteredMovies = data.filter((movie) =>
+            movie.nameEN.toLowerCase().includes(searchQuery.trim().toLowerCase()) ||
+            movie.nameRU.toLowerCase().includes(searchQuery.trim().toLowerCase())
+          );
+          setMovies(filteredMovies);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        setError('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+        setMovies([]);
+        setIsLoading(false);
+      })
 
   };
 
@@ -54,11 +67,10 @@ function Movies({ isLoggedIn }) {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onSearch={handleSearchMovies}
+          error={error}
         />
-        {isLoading && <div>Идет загрузка...</div>}
-        {error && <div>{error}</div>}
-        <MoviesCardList searchResults={searchResults} />
-        <MoviesMoreButton />
+        <MoviesCardList movies={movies} isLoading={isLoading} />
+        {!error && <MoviesMoreButton />}
       </main>
       <Footer />
     </>

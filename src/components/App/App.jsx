@@ -65,7 +65,7 @@ function App() {
         navigate('/movies', {replace: true});
       })
       .catch((err) => {
-        handleError(err, setIsSubmitError, 'login');
+        handleError(err, setIsSubmitError, 'loginForm');
       })
   };
 

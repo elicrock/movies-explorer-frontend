@@ -15,7 +15,7 @@ function SearchForm({ searchQuery, setSearchQuery, onSearch }) {
 
   return (
     <section className="search">
-      <form className="search__form" onSubmit={handleSubmit}>
+      <form className="search__form" name="searchForm" onSubmit={handleSubmit}>
         <input className="search__input" placeholder="Фильм" value={searchQuery} onChange={handleInputChange} required />
         <button className="search__btn" type="submit" />
       </form>
