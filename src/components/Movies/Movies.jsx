@@ -6,58 +6,61 @@ import MoviesCardList from './MoviesCardList/MoviesCardList';
 import MoviesMoreButton from './MoviesMoreButton/MoviesMoreButton';
 import Footer from '../Footer/Footer';
 import { getAllMovies } from '../../utils/MoviesApi';
+import { filterMovies } from '../../utils/moviesFilter';
+import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
 
 function Movies({ isLoggedIn }) {
   const [movies, setMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  // const [searchResults, setSearchResults] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     getAllMovies()
-  //       .then((data) => {
-  //         setAllMovies(data);
-  //         console.log(allMovies);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       })
-  //   }
-  // }, [isLoggedIn]);
+  const [error, setError] = useState('');
+  const [isSearchSubmit, setIsSearchSubmit] = useState(false);
 
   useEffect(() => {
-    handleSearchMovies();
+    const storageFilteredSearch = getFromLocalStorage('filtredSearch');
+
+    if (storageFilteredSearch) {
+      setFilteredMovies(storageFilteredSearch.filteredMoviesResult);
+      setSearchQuery(storageFilteredSearch.searchQuery);
+      setIsChecked(storageFilteredSearch.isChecked);
+      setIsSearchSubmit(true);
+    }
   }, []);
 
-  const handleSearchMovies = () => {
-    if (!searchQuery) {
-      return;
+  async function handleSearchMovies(isChecked) {
+    try {
+      if (!searchQuery) {
+        setIsSearchSubmit(true);
+        return;
+      }
+
+      const storageSearch = getFromLocalStorage('search');
+
+      if (storageSearch) {
+        const filteredMoviesResult = await filterMovies(storageSearch, searchQuery, isChecked);
+        // const filteredByShort = await filterShortMovies(filteredByKeyword, isChecked);
+        saveToLocalStorage('filtredSearch', { filteredMoviesResult, searchQuery, isChecked });
+        setFilteredMovies(filteredMoviesResult);
+      } else {
+        setIsLoading(true);
+        const data = await getAllMovies();
+        setMovies(data);
+        setError('');
+
+        const filteredMoviesResult = await filterMovies(data, searchQuery, isChecked);
+        // const filteredByShort = await filterShortMovies(filteredByKeyword, isChecked);
+        saveToLocalStorage('search', data);
+        saveToLocalStorage('filtredSearch', { filteredMoviesResult, searchQuery, isChecked });
+        setFilteredMovies(filteredMoviesResult);
+      }
+    } catch (error) {
+      setError('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(true);
-    getAllMovies()
-      .then((data) => {
-        if (data.length === 0) {
-          setError('Ничего не найдено');
-          setMovies([]);
-        } else {
-          const filteredMovies = data.filter((movie) =>
-            movie.nameEN.toLowerCase().includes(searchQuery.trim().toLowerCase()) ||
-            movie.nameRU.toLowerCase().includes(searchQuery.trim().toLowerCase())
-          );
-          setMovies(filteredMovies);
-          setIsLoading(false);
-        }
-      })
-      .catch(() => {
-        setError('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-        setMovies([]);
-        setIsLoading(false);
-      })
-
-  };
+  }
 
   return (
     <>
@@ -66,10 +69,12 @@ function Movies({ isLoggedIn }) {
         <SearchForm
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          onSearch={handleSearchMovies}
-          error={error}
+          isChecked={isChecked}
+          setIsChecked={setIsChecked}
+          onSearch={(isChecked) => handleSearchMovies(isChecked)}
         />
-        <MoviesCardList movies={movies} isLoading={isLoading} />
+        <MoviesCardList filteredMovies={filteredMovies} isLoading={isLoading} error={error} />
+
         {!error && <MoviesMoreButton />}
       </main>
       <Footer />

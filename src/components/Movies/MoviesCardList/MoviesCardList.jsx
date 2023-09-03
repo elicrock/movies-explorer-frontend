@@ -3,7 +3,7 @@ import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../../Preloader/Preloader';
 
-function MoviesCardList({ movies, isLoading, error }) {
+function MoviesCardList({ filteredMovies, isLoading, error }) {
   return (
     <section className="movies">
     <span className={`movies__error ${error ? 'movies__error_active' : ''}`}>{error}</span>
@@ -17,7 +17,7 @@ function MoviesCardList({ movies, isLoading, error }) {
       :
       <ul className="movies__list">
         {
-          movies.map((movie) => (
+          filteredMovies.map((movie) => (
             <MoviesCard
               key={movie.id}
               movie={movie}
