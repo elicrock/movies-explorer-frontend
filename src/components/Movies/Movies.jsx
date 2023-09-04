@@ -5,9 +5,12 @@ import SearchForm from './SearchForm/SearchForm';
 import MoviesCardList from './MoviesCardList/MoviesCardList';
 import MoviesMoreButton from './MoviesMoreButton/MoviesMoreButton';
 import Footer from '../Footer/Footer';
-import { getAllMovies } from '../../utils/MoviesApi';
+import { getAllMovies, BASE_URL } from '../../utils/MoviesApi';
+import * as mainApi from '../../utils/MainApi';
 import { filterMovies } from '../../utils/moviesFilter';
 import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
+import useResponsiveVisibleMoviesCount from '../../hooks/useResponsiveVisibleMoviesCount';
+import { SCREEN_1140, SCREEN_975, SCREEN_480, ADD_MOVIE_XL, ADD_MOVIE_LG, ADD_MOVIE_MD, ADD_MOVIE_SM } from '../../utils/constants';
 
 function Movies({ isLoggedIn }) {
   const [movies, setMovies] = useState([]);
@@ -17,62 +20,19 @@ function Movies({ isLoggedIn }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isSearchSubmit, setIsSearchSubmit] = useState(false);
-  const [visibleMoviesCount, setVisibleMoviesCount] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setWindowWidth(window.innerWidth);
-  //   };
-
-  //   window.addEventListener('resize', handleResize);
-
-  //   return () => {
-  //     window.removeEventListener('resize', handleResize);
-  //   };
-  // }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    const resizeTimeoutDelay = 300; // Задержка в миллисекундах
-    let resizeTimeout;
-
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(handleResize, resizeTimeoutDelay);
-    });
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimeout);
-    };
-  }, []);
+  const [visibleMoviesCount, setVisibleMoviesCount, windowWidth] = useResponsiveVisibleMoviesCount();
 
   const loadMoreMovies = useCallback(() => {
-    if (windowWidth > 1140) {
-      // Для ширины 1140px и выше загружаем по 4 карточки
-      setVisibleMoviesCount((prevCount) => prevCount + 4);
-    } else if (windowWidth >= 975 && windowWidth <= 1140) {
-      // Для ширины от 975px до 1140px загружаем по 3 карточки
-      setVisibleMoviesCount((prevCount) => prevCount + 3);
-    } else if (windowWidth > 480 && windowWidth <= 975) {
-      // Для ширины от 480px до 975px загружаем по 2 карточки
-      setVisibleMoviesCount((prevCount) => prevCount + 2);
-    } else if (windowWidth <= 480) {
-      // Для ширины меньше 480px загружаем по 1 карточке
-      setVisibleMoviesCount((prevCount) => prevCount + 1);
+    if (windowWidth > SCREEN_1140) {
+      setVisibleMoviesCount((prevCount) => prevCount + ADD_MOVIE_XL);
+    } else if (windowWidth >= SCREEN_975 && windowWidth <= SCREEN_1140) {
+      setVisibleMoviesCount((prevCount) => prevCount + ADD_MOVIE_LG);
+    } else if (windowWidth > SCREEN_480 && windowWidth <= SCREEN_975) {
+      setVisibleMoviesCount((prevCount) => prevCount + ADD_MOVIE_MD);
+    } else if (windowWidth <= SCREEN_480) {
+      setVisibleMoviesCount((prevCount) => prevCount + ADD_MOVIE_SM);
     }
-  }, [windowWidth]);
-
-  // useEffect(() => {
-  //   if (filteredMovies.length > visibleMoviesCount) {
-  //     // Если есть еще карточки для отображения, показываем кнопку "Ещё"
-  //     return;
-  //   }
-  // }, [filteredMovies, visibleMoviesCount]);
+  }, [windowWidth, setVisibleMoviesCount]);
 
   useEffect(() => {
     const storageFilteredSearch = getFromLocalStorage('filtredSearch');
@@ -83,21 +43,6 @@ function Movies({ isLoggedIn }) {
       setIsChecked(storageFilteredSearch.isChecked);
       setIsSearchSubmit(true);
     }
-    let initialVisibleMoviesCount = 16; // Значение по умолчанию
-
-    if (window.innerWidth >= 1141) {
-      initialVisibleMoviesCount = 16;
-    } else if (window.innerWidth >= 975 && window.innerWidth <= 1140) {
-      initialVisibleMoviesCount = 12;
-    } else if (window.innerWidth > 480 && window.innerWidth <= 975) {
-      initialVisibleMoviesCount = 8;
-    } else if (window.innerWidth <= 480) {
-      initialVisibleMoviesCount = 5;
-    }
-
-    setTimeout(() => {
-      setVisibleMoviesCount(initialVisibleMoviesCount);
-    }, 0);
   }, []);
 
   async function handleSearchMovies(isChecked) {
@@ -115,7 +60,6 @@ function Movies({ isLoggedIn }) {
         // const filteredByShort = await filterShortMovies(filteredByKeyword, isChecked);
         saveToLocalStorage('filtredSearch', { filteredMoviesResult, searchQuery, isChecked });
         setFilteredMovies(filteredMoviesResult);
-        setVisibleMoviesCount(16);
         if (filteredMoviesResult.length === 0) {
           setError('Ничего не найдено');
         }  else {
@@ -130,7 +74,6 @@ function Movies({ isLoggedIn }) {
         saveToLocalStorage('search', data);
         saveToLocalStorage('filtredSearch', { filteredMoviesResult, searchQuery, isChecked });
         setFilteredMovies(filteredMoviesResult);
-        setVisibleMoviesCount(16);
         if (filteredMoviesResult.length === 0) {
           setError('Ничего не найдено');
         } else {
@@ -144,6 +87,32 @@ function Movies({ isLoggedIn }) {
     }
   }
 
+  function handleSaveMovie(movie) {
+    mainApi.addSaveMovie({
+      country: movie.country,
+      director: movie.director,
+      duration: movie.duration,
+      year: movie.year,
+      description: movie.description,
+      image: `${BASE_URL}/${movie.image.url}`,
+      trailerLink: movie.trailerLink,
+      thumbnail: `${BASE_URL}/${movie.image.formats.thumbnail.url}`,
+      movieId: movie.id,
+      nameRU: movie.nameRU,
+      nameEN: movie.nameEN,
+    })
+    .then((data) => {
+      console.log('save', data);
+    })
+  }
+
+  function handleDeleteMovie(movie) {
+    mainApi.deleteSavedMovie(movie._id)
+      .then((data) => {
+        console.log('delete', data);
+      })
+  }
+
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
@@ -155,7 +124,7 @@ function Movies({ isLoggedIn }) {
           setIsChecked={setIsChecked}
           onSearch={(isChecked) => handleSearchMovies(isChecked)}
         />
-        <MoviesCardList filteredMovies={filteredMovies.slice(0, visibleMoviesCount)} isLoading={isLoading} error={error} />
+        <MoviesCardList movies={filteredMovies.slice(0, visibleMoviesCount)} isLoading={isLoading} error={error} saveMovie={handleSaveMovie} deleteMovie={handleDeleteMovie} />
 
         {(!error && filteredMovies.length !== 0 && visibleMoviesCount < filteredMovies.length) && <MoviesMoreButton loadMore={loadMoreMovies} />}
       </main>

@@ -45,7 +45,7 @@ export const getSavedMovies = () => {
   })
 }
 
-export const addSavedMovie = (data) => {
+export const addSaveMovie = (data) => {
   return request(`${BASE_URL}/movies`, {
     method: 'POST',
     credentials: 'include',

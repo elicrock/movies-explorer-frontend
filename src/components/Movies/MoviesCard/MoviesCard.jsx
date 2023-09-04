@@ -4,7 +4,7 @@ import './MoviesCard.css';
 import { BASE_URL } from '../../../utils/MoviesApi';
 import { formatDuration } from '../../../utils/durationFormat';
 
-function MoviesCard({ movie }) {
+function MoviesCard({ movie, saveMovie, deleteMovie }) {
   const [isSaved, setIsSaved] = useState(false);
   const location = useLocation();
 
@@ -12,6 +12,8 @@ function MoviesCard({ movie }) {
 
   function handleSaveClick() {
     setIsSaved(!isSaved);
+    // console.log(movie);
+    isSaved ? deleteMovie(movie) : saveMovie(movie);
   }
 
   function handleImageClick() {
@@ -20,7 +22,7 @@ function MoviesCard({ movie }) {
 
   return (
     <li className="movie">
-      <img src={`${BASE_URL}${movie.image.url}`} alt={`Постер фильма ${movie.nameRU}`} className="movie__img" onClick={handleImageClick} />
+      <img src={movie.image.url ? `${BASE_URL}${movie.image.url}` : movie.image} alt={`Постер фильма ${movie.nameRU}`} className="movie__img" onClick={handleImageClick} />
       <div className="movie__container">
         <div className="movie__caption">
           <h2 className="movie__title">{movie.nameRU}</h2>

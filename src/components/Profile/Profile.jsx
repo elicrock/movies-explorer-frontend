@@ -11,6 +11,8 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
   const currentUser = useContext(CurrentUserContext);
   const { values, handleChange, errors, isValid, setValues, resetForm, isButtonDisable } = useFormAndValidation();
 
+  const initialValuesChanged = values.name !== currentUser.name || values.email !== currentUser.email;
+
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdateSuccess, setIsUpdateSuccess] = useState('');
@@ -30,9 +32,9 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
         setIsSubmit(false);
         if (data) {
           setIsUpdateSuccess('Данные успешно обновлены');
-          setTimeout(() => {
-            setIsUpdateSuccess('');
-          }, 2000);
+          // setTimeout(() => {
+          //   setIsUpdateSuccess('');
+          // }, 2000);
         }
       })
       .catch((err) => {
@@ -51,7 +53,8 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
         email: currentUser.email
       });
     }
-  }, [currentUser, setValues, resetForm]);
+    setIsSubmitError('');
+  }, [currentUser, setValues, resetForm, setIsSubmitError]);
 
   const signOut = () => {
     logout()
@@ -87,7 +90,7 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
           <div className="profile__buttons-container">
             <span className={`profile__submit-error ${isUpdateSuccess || isSubmitError ? 'profile__submit-error_active' : ''}`}>{isUpdateSuccess || isSubmitError}</span>
             {isSubmit &&
-              <button type="submit" className={`profile__button-save ${!isValid || isButtonDisable ? 'profile__button-save_disabled' : ''}`} disabled={!isValid || isButtonDisable}>
+              <button type="submit" className={`profile__button-save ${!isValid || isButtonDisable || !initialValuesChanged ? 'profile__button-save_disabled' : ''}`} disabled={!isValid || isButtonDisable || !initialValuesChanged}>
                 {isLoading ? 'Сохранение' : 'Сохранить'}
               </button>
             }
