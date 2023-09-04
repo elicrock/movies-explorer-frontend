@@ -1,22 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './SavedMovies.css';
 import Header from '../Header/Header';
 import SearchForm from '../Movies/SearchForm/SearchForm';
 import MoviesCardList from '../Movies/MoviesCardList/MoviesCardList';
-import MoviesCard from '../Movies/MoviesCard/MoviesCard';
 import Footer from '../Footer/Footer';
 
 function SavedMovies({ isLoggedIn }) {
+  // const [filteredMovies, setFilteredMovies] = useState([]);
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
       <main className="content">
         <SearchForm />
-        <MoviesCardList>
-          <MoviesCard></MoviesCard>
-          <MoviesCard></MoviesCard>
-          <MoviesCard></MoviesCard>
-        </MoviesCardList>
+        <MoviesCardList  />
         <div className="saved-movies__divider"></div>
       </main>
       <Footer />

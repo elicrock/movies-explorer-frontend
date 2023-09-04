@@ -14,9 +14,13 @@ function MoviesCard({ movie }) {
     setIsSaved(!isSaved);
   }
 
+  function handleImageClick() {
+    window.open(movie.trailerLink, '_blank');
+  }
+
   return (
     <li className="movie">
-      <img src={`${BASE_URL}${movie.image.url}`} alt={`Постер фильма ${movie.nameRU}`} className="movie__img" />
+      <img src={`${BASE_URL}${movie.image.url}`} alt={`Постер фильма ${movie.nameRU}`} className="movie__img" onClick={handleImageClick} />
       <div className="movie__container">
         <div className="movie__caption">
           <h2 className="movie__title">{movie.nameRU}</h2>

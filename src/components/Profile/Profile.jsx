@@ -13,9 +13,12 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
 
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUpdateSuccess, setIsUpdateSuccess] = useState('');
 
   function handleSubmitClick() {
     setIsSubmit(!isSubmit);
+    setIsUpdateSuccess('');
+    setIsSubmitError('');
   }
 
   const handleSubmit = (e) => {
@@ -25,6 +28,12 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
       .then((data) => {
         setCurrentUser(data);
         setIsSubmit(false);
+        if (data) {
+          setIsUpdateSuccess('Данные успешно обновлены');
+          setTimeout(() => {
+            setIsUpdateSuccess('');
+          }, 2000);
+        }
       })
       .catch((err) => {
         handleError(err, setIsSubmitError);
@@ -76,7 +85,7 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
             <span className={`profile__input-error email-error ${errors.email ? 'profile__input-error_active' : ''}`}>{errors.email}</span>
           </div>
           <div className="profile__buttons-container">
-            <span className={`profile__submit-error ${isSubmitError ? 'profile__submit-error_active' : ''}`}>{isSubmitError}</span>
+            <span className={`profile__submit-error ${isUpdateSuccess || isSubmitError ? 'profile__submit-error_active' : ''}`}>{isUpdateSuccess || isSubmitError}</span>
             {isSubmit &&
               <button type="submit" className={`profile__button-save ${!isValid || isButtonDisable ? 'profile__button-save_disabled' : ''}`} disabled={!isValid || isButtonDisable}>
                 {isLoading ? 'Сохранение' : 'Сохранить'}
