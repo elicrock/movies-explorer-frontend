@@ -3,14 +3,11 @@ import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../../Preloader/Preloader';
 
-function MoviesCardList({ movies, isLoading, error, saveMovie, deleteMovie }) {
+function MoviesCardList({ movies, isLoading, error, saveMovie, deleteMovie, isLiked }) {
   return (
     <section className="movies">
     <span className={`movies__error ${error ? 'movies__error_active' : ''}`}>{error}</span>
-    {/* {error ?
-      <span className={`movies__error ${error ? 'movies__error_active' : ''}`}>{error}</span>
-      : ''
-    } */}
+
     {
       isLoading ?
         <Preloader />
@@ -19,10 +16,12 @@ function MoviesCardList({ movies, isLoading, error, saveMovie, deleteMovie }) {
         {
           movies.map((movie) => (
             <MoviesCard
-              key={movie.id || movie._id || movie.movieId}
+              key={movie.id || movie._id}
               movie={movie}
               saveMovie={saveMovie}
               deleteMovie={deleteMovie}
+              isLiked={isLiked}
+              movies={movies}
             />
           ))
         }

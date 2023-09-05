@@ -13,6 +13,8 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import Preloader from '../Preloader/Preloader';
 import { getUserInfo, register, authorize } from '../../utils/MainApi';
 import { handleError } from '../../utils/handleError';
+import * as mainApi from '../../utils/MainApi';
+import { BASE_URL } from '../../utils/constants';
 
 function App() {
 
@@ -22,6 +24,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSubmitError, setIsSubmitError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [savedMovies, setSavedMovies] = React.useState([]);
 
   useEffect(() => {
     checkToken();
@@ -69,6 +72,60 @@ function App() {
       })
   };
 
+  function handleSaveMovie(movie) {
+    return mainApi.addSaveMovie({
+      country: movie.country,
+      director: movie.director,
+      duration: movie.duration,
+      year: movie.year,
+      description: movie.description,
+      image: `${BASE_URL}/${movie.image.url}`,
+      trailerLink: movie.trailerLink,
+      thumbnail: `${BASE_URL}/${movie.image.formats.thumbnail.url}`,
+      movieId: movie.id,
+      nameRU: movie.nameRU,
+      nameEN: movie.nameEN,
+    })
+    .then(newMovie => {
+      setSavedMovies([newMovie, ...savedMovies]);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+
+  // function handleDeleteMovie(movie) {
+  //   mainApi.deleteSavedMovie(movie._id)
+  //   .then(() => {
+  //     setSavedMovies((movies) => movies.filter((m) => m._id !== movie._id));
+  //   })
+  //   .catch(error => {
+  //     console.error(error);
+  //   });
+  // }
+
+  function handleDeleteMovie(movie) {
+    let movieId = movie._id;
+
+    if (!movieId && savedMovies.length > 0) {
+      const foundMovie = savedMovies.find((m) => m.movieId === movie.id);
+      if (foundMovie) {
+        movieId = foundMovie._id;
+      }
+    }
+
+    if (movieId) {
+      mainApi
+        .deleteSavedMovie(movieId)
+        .then(() => {
+          setSavedMovies((movie) => movie.filter((m) => m._id !== movieId));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }
+
   return (
     <div className="page">
       {isLoading ? (
@@ -78,10 +135,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Main isLoggedIn={isLoggedIn} />}/>
             <Route path="/movies" element={
-              <ProtectedRoute element={Movies} isLoggedIn={isLoggedIn} />
+              <ProtectedRoute element={Movies} isLoggedIn={isLoggedIn} savedMovies={savedMovies} saveMovie={handleSaveMovie} deleteMovie={handleDeleteMovie} />
             }/>
             <Route path="/saved-movies" element={
-              <ProtectedRoute element={SavedMovies} isLoggedIn={isLoggedIn} />
+              <ProtectedRoute element={SavedMovies} savedMovies={savedMovies} setSavedMovies={setSavedMovies} isLoggedIn={isLoggedIn} deleteMovie={handleDeleteMovie} />
             }/>
             <Route path="/profile" element={
               <ProtectedRoute

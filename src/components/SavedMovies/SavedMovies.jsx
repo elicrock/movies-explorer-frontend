@@ -6,22 +6,22 @@ import MoviesCardList from '../Movies/MoviesCardList/MoviesCardList';
 import Footer from '../Footer/Footer';
 import { getSavedMovies } from '../../utils/MainApi';
 
-function SavedMovies({ isLoggedIn }) {
-  const [movies, setMovies] = useState([]);
+function SavedMovies({ savedMovies, setSavedMovies, isLoggedIn, deleteMovie }) {
+  // const [movies, setMovies] = useState([]);
 
   useEffect(() => {
     getSavedMovies()
       .then((data) => {
-        setMovies(data);
+        setSavedMovies(data);
       })
-  }, [])
+  }, [setSavedMovies])
 
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
       <main className="content">
         <SearchForm />
-        <MoviesCardList movies={movies} />
+        <MoviesCardList movies={savedMovies} deleteMovie={deleteMovie} />
         <div className="saved-movies__divider"></div>
       </main>
       <Footer />

@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://api.nomoreparties.co';
+import { BASE_URL } from "./constants";
 
 function resStatus(res) {
   if (res.ok) {

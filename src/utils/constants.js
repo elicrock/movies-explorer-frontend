@@ -13,6 +13,7 @@ const ADD_MOVIE_XL = 4;
 const ADD_MOVIE_LG = 3;
 const ADD_MOVIE_MD = 2;
 const ADD_MOVIE_SM = 2;
+const BASE_URL = 'https://api.nomoreparties.co';
 
 export {
   BAD_REQUEST,
@@ -29,5 +30,6 @@ export {
   ADD_MOVIE_XL,
   ADD_MOVIE_LG,
   ADD_MOVIE_MD,
-  ADD_MOVIE_SM
+  ADD_MOVIE_SM,
+  BASE_URL
 };

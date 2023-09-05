@@ -5,14 +5,13 @@ import SearchForm from './SearchForm/SearchForm';
 import MoviesCardList from './MoviesCardList/MoviesCardList';
 import MoviesMoreButton from './MoviesMoreButton/MoviesMoreButton';
 import Footer from '../Footer/Footer';
-import { getAllMovies, BASE_URL } from '../../utils/MoviesApi';
-import * as mainApi from '../../utils/MainApi';
+import { getAllMovies } from '../../utils/MoviesApi';
 import { filterMoviesByKeyword, filterShortMovies } from '../../utils/moviesFilter';
 import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
 import useResponsiveVisibleMoviesCount from '../../hooks/useResponsiveVisibleMoviesCount';
 import { SCREEN_1140, SCREEN_975, SCREEN_480, ADD_MOVIE_XL, ADD_MOVIE_LG, ADD_MOVIE_MD, ADD_MOVIE_SM } from '../../utils/constants';
 
-function Movies({ isLoggedIn }) {
+function Movies({ isLoggedIn, saveMovie, deleteMovie, isLiked }) {
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -50,7 +49,7 @@ function Movies({ isLoggedIn }) {
         return;
       }
 
-      const storageSearch = getFromLocalStorage('search');
+      const storageSearch = getFromLocalStorage('allМovies');
 
       if (storageSearch) {
         const filteredByKeyword = await filterMoviesByKeyword(storageSearch, searchQuery.trim());
@@ -66,7 +65,7 @@ function Movies({ isLoggedIn }) {
         setIsLoading(true);
         const data = await getAllMovies();
         setMovies(data);
-        saveToLocalStorage('search', data);
+        saveToLocalStorage('allМovies', data);
         const filteredByKeyword = await filterMoviesByKeyword(data, searchQuery.trim());
         const filteredResult = await filterShortMovies(filteredByKeyword, isChecked);
         saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
@@ -91,32 +90,6 @@ function Movies({ isLoggedIn }) {
     saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
   }
 
-  function handleSaveMovie(movie) {
-    mainApi.addSaveMovie({
-      country: movie.country,
-      director: movie.director,
-      duration: movie.duration,
-      year: movie.year,
-      description: movie.description,
-      image: `${BASE_URL}/${movie.image.url}`,
-      trailerLink: movie.trailerLink,
-      thumbnail: `${BASE_URL}/${movie.image.formats.thumbnail.url}`,
-      movieId: movie.id,
-      nameRU: movie.nameRU,
-      nameEN: movie.nameEN,
-    })
-    .then((data) => {
-      console.log('save', data);
-    })
-  }
-
-  function handleDeleteMovie(movie) {
-    mainApi.deleteSavedMovie(movie._id)
-      .then((data) => {
-        console.log('delete', data);
-      })
-  }
-
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
@@ -129,7 +102,7 @@ function Movies({ isLoggedIn }) {
           isChecked={isChecked}
           setIsChecked={setIsChecked}
         />
-        <MoviesCardList movies={filteredMovies.slice(0, visibleMoviesCount)} isLoading={isLoading} error={error} saveMovie={handleSaveMovie} deleteMovie={handleDeleteMovie} />
+        <MoviesCardList movies={filteredMovies.slice(0, visibleMoviesCount)} isLoading={isLoading} error={error} saveMovie={saveMovie} deleteMovie={deleteMovie} isLiked={isLiked} />
 
         {(!error && filteredMovies.length !== 0 && visibleMoviesCount < filteredMovies.length) && <MoviesMoreButton loadMore={loadMoreMovies} />}
       </main>

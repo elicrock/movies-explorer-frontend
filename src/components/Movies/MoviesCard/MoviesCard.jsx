@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import './MoviesCard.css';
-import { BASE_URL } from '../../../utils/MoviesApi';
+import { BASE_URL } from '../../../utils/constants';
 import { formatDuration } from '../../../utils/durationFormat';
 
 function MoviesCard({ movie, saveMovie, deleteMovie }) {
@@ -12,8 +12,16 @@ function MoviesCard({ movie, saveMovie, deleteMovie }) {
 
   function handleSaveClick() {
     setIsSaved(!isSaved);
-    // console.log(movie);
-    isSaved ? deleteMovie(movie) : saveMovie(movie);
+  }
+
+  function handleSaveMovie() {
+    saveMovie(movie);
+    handleSaveClick();
+  }
+
+  function handleDeleteMovie() {
+    deleteMovie(movie);
+    handleSaveClick();
   }
 
   function handleImageClick() {
@@ -28,7 +36,7 @@ function MoviesCard({ movie, saveMovie, deleteMovie }) {
           <h2 className="movie__title">{movie.nameRU}</h2>
           <p className="movie__duration">{formatDuration(movie.duration)}</p>
         </div>
-        <button type="button" className={`movie__save-btn ${isSaved ? 'movie__save-btn_active' : ''} ${changeButtonBg ? 'movie__delete-btn' : ''}`} onClick={handleSaveClick} />
+        <button type="button" className={`movie__save-btn ${isSaved ? 'movie__save-btn_active' : ''} ${changeButtonBg ? 'movie__delete-btn' : ''}`} onClick={changeButtonBg || isSaved ? handleDeleteMovie : handleSaveMovie} />
       </div>
     </li>
   )
