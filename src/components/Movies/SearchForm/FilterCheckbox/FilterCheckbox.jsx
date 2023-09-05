@@ -1,28 +1,12 @@
 import React from 'react';
 import './FilterCheckbox.css';
 
-function FilterCheckbox({ isChecked, setIsChecked, onSearch }) {
-
-  // const handleCheckboxChange = () => {
-  //   setIsChecked(!isChecked);
-  //   onSearch();
-  //   console.log(isChecked);
-  // };
-
-  // const handleCheckboxChange = () => {
-  //   setIsChecked((prevIsChecked) => {
-  //     const newIsChecked = !prevIsChecked;
-  //      // Вызываем onSearch после обновления isChecked
-  //     console.log(newIsChecked); // Выводим текущее значение newIsChecked
-  //     return newIsChecked;
-  //   });
-  //   onSearch();
-  // };
+function FilterCheckbox({ isChecked, setIsChecked, onCheckbox }) {
 
   const handleCheckboxChange = () => {
     const newIsChecked = !isChecked;
     setIsChecked(newIsChecked);
-    onSearch(newIsChecked); // Передаем новое значение isChecked в onSearch
+    onCheckbox(newIsChecked);
   };
 
   return (

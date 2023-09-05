@@ -7,7 +7,7 @@ import MoviesMoreButton from './MoviesMoreButton/MoviesMoreButton';
 import Footer from '../Footer/Footer';
 import { getAllMovies, BASE_URL } from '../../utils/MoviesApi';
 import * as mainApi from '../../utils/MainApi';
-import { filterMovies } from '../../utils/moviesFilter';
+import { filterMoviesByKeyword, filterShortMovies } from '../../utils/moviesFilter';
 import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
 import useResponsiveVisibleMoviesCount from '../../hooks/useResponsiveVisibleMoviesCount';
 import { SCREEN_1140, SCREEN_975, SCREEN_480, ADD_MOVIE_XL, ADD_MOVIE_LG, ADD_MOVIE_MD, ADD_MOVIE_SM } from '../../utils/constants';
@@ -19,7 +19,6 @@ function Movies({ isLoggedIn }) {
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isSearchSubmit, setIsSearchSubmit] = useState(false);
   const [visibleMoviesCount, setVisibleMoviesCount, windowWidth] = useResponsiveVisibleMoviesCount();
 
   const loadMoreMovies = useCallback(() => {
@@ -38,29 +37,27 @@ function Movies({ isLoggedIn }) {
     const storageFilteredSearch = getFromLocalStorage('filtredSearch');
 
     if (storageFilteredSearch) {
-      setFilteredMovies(storageFilteredSearch.filteredMoviesResult);
+      setFilteredMovies(storageFilteredSearch.filteredResult);
       setSearchQuery(storageFilteredSearch.searchQuery.trim());
       setIsChecked(storageFilteredSearch.isChecked);
-      setIsSearchSubmit(true);
     }
   }, []);
 
-  async function handleSearchMovies(isChecked) {
+  async function handleSearchMovies(searchQuery) {
     try {
 
       if (!searchQuery.trim()) {
-        setIsSearchSubmit(true);
         return;
       }
 
       const storageSearch = getFromLocalStorage('search');
 
       if (storageSearch) {
-        const filteredMoviesResult = await filterMovies(storageSearch, searchQuery.trim(), isChecked);
-        // const filteredByShort = await filterShortMovies(filteredByKeyword, isChecked);
-        saveToLocalStorage('filtredSearch', { filteredMoviesResult, searchQuery, isChecked });
-        setFilteredMovies(filteredMoviesResult);
-        if (filteredMoviesResult.length === 0) {
+        const filteredByKeyword = await filterMoviesByKeyword(storageSearch, searchQuery.trim());
+        const filteredResult = await filterShortMovies(filteredByKeyword, isChecked);
+        saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
+        setFilteredMovies(filteredResult);
+        if (filteredResult.length === 0) {
           setError('Ничего не найдено');
         }  else {
           setError('');
@@ -69,12 +66,12 @@ function Movies({ isLoggedIn }) {
         setIsLoading(true);
         const data = await getAllMovies();
         setMovies(data);
-        const filteredMoviesResult = await filterMovies(data, searchQuery.trim(), isChecked);
-        // const filteredByShort = await filterShortMovies(filteredByKeyword, isChecked);
         saveToLocalStorage('search', data);
-        saveToLocalStorage('filtredSearch', { filteredMoviesResult, searchQuery, isChecked });
-        setFilteredMovies(filteredMoviesResult);
-        if (filteredMoviesResult.length === 0) {
+        const filteredByKeyword = await filterMoviesByKeyword(data, searchQuery.trim());
+        const filteredResult = await filterShortMovies(filteredByKeyword, isChecked);
+        saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
+        setFilteredMovies(filteredResult);
+        if (filteredResult.length === 0) {
           setError('Ничего не найдено');
         } else {
           setError('');
@@ -85,6 +82,13 @@ function Movies({ isLoggedIn }) {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  function handleCheckbox(isChecked) {
+    const filteredByKeyword = filterMoviesByKeyword(movies, searchQuery.trim());
+    const filteredResult = filterShortMovies(filteredByKeyword, isChecked);
+    setFilteredMovies(filteredResult);
+    saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
   }
 
   function handleSaveMovie(movie) {
@@ -120,9 +124,10 @@ function Movies({ isLoggedIn }) {
         <SearchForm
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          onSearch={handleSearchMovies}
+          onCheckbox={handleCheckbox}
           isChecked={isChecked}
           setIsChecked={setIsChecked}
-          onSearch={(isChecked) => handleSearchMovies(isChecked)}
         />
         <MoviesCardList movies={filteredMovies.slice(0, visibleMoviesCount)} isLoading={isLoading} error={error} saveMovie={handleSaveMovie} deleteMovie={handleDeleteMovie} />
 
