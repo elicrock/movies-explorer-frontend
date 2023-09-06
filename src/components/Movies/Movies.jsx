@@ -11,7 +11,7 @@ import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorag
 import useResponsiveVisibleMoviesCount from '../../hooks/useResponsiveVisibleMoviesCount';
 import { SCREEN_1140, SCREEN_975, SCREEN_480, ADD_MOVIE_XL, ADD_MOVIE_LG, ADD_MOVIE_MD, ADD_MOVIE_SM } from '../../utils/constants';
 
-function Movies({ isLoggedIn, saveMovie, deleteMovie, isLiked }) {
+function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -102,7 +102,7 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie, isLiked }) {
           isChecked={isChecked}
           setIsChecked={setIsChecked}
         />
-        <MoviesCardList movies={filteredMovies.slice(0, visibleMoviesCount)} isLoading={isLoading} error={error} saveMovie={saveMovie} deleteMovie={deleteMovie} isLiked={isLiked} />
+        <MoviesCardList movies={filteredMovies.slice(0, visibleMoviesCount)} isLoading={isLoading} error={error} saveMovie={saveMovie} deleteMovie={deleteMovie} />
 
         {(!error && filteredMovies.length !== 0 && visibleMoviesCount < filteredMovies.length) && <MoviesMoreButton loadMore={loadMoreMovies} />}
       </main>

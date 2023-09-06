@@ -3,7 +3,7 @@ import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../../Preloader/Preloader';
 
-function MoviesCardList({ movies, isLoading, error, saveMovie, deleteMovie, isLiked }) {
+function MoviesCardList({ movies, isLoading, error, saveMovie, deleteMovie }) {
   return (
     <section className="movies">
     <span className={`movies__error ${error ? 'movies__error_active' : ''}`}>{error}</span>
@@ -20,7 +20,6 @@ function MoviesCardList({ movies, isLoading, error, saveMovie, deleteMovie, isLi
               movie={movie}
               saveMovie={saveMovie}
               deleteMovie={deleteMovie}
-              isLiked={isLiked}
               movies={movies}
             />
           ))
