@@ -84,10 +84,13 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
   }
 
   function handleCheckbox(isChecked) {
-    const filteredByKeyword = filterMoviesByKeyword(movies, searchQuery.trim());
-    const filteredResult = filterShortMovies(filteredByKeyword, isChecked);
-    setFilteredMovies(filteredResult);
-    saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
+    const storageSearch = getFromLocalStorage('allМovies');
+    if (storageSearch) {
+      const filteredByKeyword = filterMoviesByKeyword(storageSearch, searchQuery.trim());
+      const filteredResult = filterShortMovies(filteredByKeyword, isChecked);
+      setFilteredMovies(filteredResult);
+      saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
+    }
   }
 
   return (
