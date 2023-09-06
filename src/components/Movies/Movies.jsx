@@ -6,6 +6,7 @@ import MoviesCardList from './MoviesCardList/MoviesCardList';
 import MoviesMoreButton from './MoviesMoreButton/MoviesMoreButton';
 import Footer from '../Footer/Footer';
 import { getAllMovies } from '../../utils/MoviesApi';
+import { getSavedMovies } from '../../utils/MainApi';
 import { filterMoviesByKeyword, filterShortMovies } from '../../utils/moviesFilter';
 import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
 import useResponsiveVisibleMoviesCount from '../../hooks/useResponsiveVisibleMoviesCount';
@@ -17,6 +18,7 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [savedMovies, setSavedMovies] = useState([]);
   const [error, setError] = useState('');
   const [visibleMoviesCount, setVisibleMoviesCount, windowWidth] = useResponsiveVisibleMoviesCount();
 
@@ -35,12 +37,26 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
   useEffect(() => {
     const storageFilteredSearch = getFromLocalStorage('filtredSearch');
 
+    const savedMoviesFromLocalStorage = getFromLocalStorage('savedMovies') || [];
+    setSavedMovies(savedMoviesFromLocalStorage);
+
     if (storageFilteredSearch) {
       setFilteredMovies(storageFilteredSearch.filteredResult);
       setSearchQuery(storageFilteredSearch.searchQuery.trim());
       setIsChecked(storageFilteredSearch.isChecked);
+    } else {
+      setFilteredMovies([]);
     }
-  }, []);
+  }, [setSavedMovies, isChecked]);
+
+  const isMovieSaved = (movie, savedMovies) => {
+    return savedMovies.find(savedMovie => savedMovie.movieId === movie.id);
+  }
+
+  const moviesWithSavedFlag = filteredMovies.map(movie => ({
+    ...movie,
+    isSaved: isMovieSaved(movie, savedMovies),
+  }));
 
   async function handleSearchMovies(searchQuery) {
     try {
@@ -64,7 +80,10 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
       } else {
         setIsLoading(true);
         const data = await getAllMovies();
+        const saved = await getSavedMovies();
+        setSavedMovies(saved);
         setMovies(data);
+        saveToLocalStorage('savedMovies', saved);
         saveToLocalStorage('allМovies', data);
         const filteredByKeyword = await filterMoviesByKeyword(data, searchQuery.trim());
         const filteredResult = await filterShortMovies(filteredByKeyword, isChecked);
@@ -90,6 +109,11 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
       const filteredResult = filterShortMovies(filteredByKeyword, isChecked);
       setFilteredMovies(filteredResult);
       saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
+      if (filteredResult.length === 0) {
+        setError('Ничего не найдено');
+      } else {
+        setError('');
+      }
     }
   }
 
@@ -105,7 +129,7 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
           isChecked={isChecked}
           setIsChecked={setIsChecked}
         />
-        <MoviesCardList movies={filteredMovies.slice(0, visibleMoviesCount)} isLoading={isLoading} error={error} saveMovie={saveMovie} deleteMovie={deleteMovie} />
+        <MoviesCardList movies={moviesWithSavedFlag.slice(0, visibleMoviesCount)} isLoading={isLoading} error={error} saveMovie={saveMovie} deleteMovie={deleteMovie} />
 
         {(!error && filteredMovies.length !== 0 && visibleMoviesCount < filteredMovies.length) && <MoviesMoreButton loadMore={loadMoreMovies} />}
       </main>

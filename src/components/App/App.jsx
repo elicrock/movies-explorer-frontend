@@ -15,6 +15,7 @@ import { getUserInfo, register, authorize } from '../../utils/MainApi';
 import { handleError } from '../../utils/handleError';
 import * as mainApi from '../../utils/MainApi';
 import { BASE_URL } from '../../utils/constants';
+import { saveToLocalStorage } from '../../utils/localStorage';
 
 function App() {
 
@@ -88,21 +89,12 @@ function App() {
     })
     .then(newMovie => {
       setSavedMovies([newMovie, ...savedMovies]);
+      saveToLocalStorage('savedMovies', [newMovie, ...savedMovies]);
     })
     .catch(error => {
       console.error(error);
     });
   }
-
-  // function handleDeleteMovie(movie) {
-  //   mainApi.deleteSavedMovie(movie._id)
-  //   .then(() => {
-  //     setSavedMovies((movies) => movies.filter((m) => m._id !== movie._id));
-  //   })
-  //   .catch(error => {
-  //     console.error(error);
-  //   });
-  // }
 
   function handleDeleteMovie(movie) {
     let movieId = movie._id;
@@ -119,6 +111,7 @@ function App() {
         .deleteSavedMovie(movieId)
         .then(() => {
           setSavedMovies((movie) => movie.filter((m) => m._id !== movieId));
+          saveToLocalStorage('savedMovies', savedMovies.filter((m) => m._id !== movieId));
         })
         .catch((error) => {
           console.error(error);
@@ -135,7 +128,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Main isLoggedIn={isLoggedIn} />}/>
             <Route path="/movies" element={
-              <ProtectedRoute element={Movies} isLoggedIn={isLoggedIn} savedMovies={savedMovies} saveMovie={handleSaveMovie} deleteMovie={handleDeleteMovie} />
+              <ProtectedRoute element={Movies} isLoggedIn={isLoggedIn} saveMovie={handleSaveMovie} deleteMovie={handleDeleteMovie} />
             }/>
             <Route path="/saved-movies" element={
               <ProtectedRoute element={SavedMovies} savedMovies={savedMovies} setSavedMovies={setSavedMovies} isLoggedIn={isLoggedIn} deleteMovie={handleDeleteMovie} />
@@ -150,7 +143,7 @@ function App() {
                 setIsSubmitError={setIsSubmitError}
               />
             }/>
-            <Route path="/signup" element={<Register onRegister={onRegister} isSubmitError={isSubmitError} />}/>
+            <Route path="/signup" element={<Register onRegister={onRegister} isSubmitError={isSubmitError}/>}/>
             <Route path="/signin" element={<Login onLogin={onLogin} isSubmitError={isSubmitError} />}/>
             <Route path="*" element={<PageNotFound />} />
           </Routes>

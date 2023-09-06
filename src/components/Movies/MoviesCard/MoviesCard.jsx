@@ -5,7 +5,7 @@ import { BASE_URL } from '../../../utils/constants';
 import { formatDuration } from '../../../utils/durationFormat';
 
 function MoviesCard({ movie, saveMovie, deleteMovie }) {
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(movie.isSaved);
   const location = useLocation();
 
   const changeButtonBg = location.pathname === '/saved-movies';

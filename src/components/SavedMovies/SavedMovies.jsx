@@ -5,14 +5,15 @@ import SearchForm from '../Movies/SearchForm/SearchForm';
 import MoviesCardList from '../Movies/MoviesCardList/MoviesCardList';
 import Footer from '../Footer/Footer';
 import { getSavedMovies } from '../../utils/MainApi';
+import { saveToLocalStorage } from '../../utils/localStorage';
 
 function SavedMovies({ savedMovies, setSavedMovies, isLoggedIn, deleteMovie }) {
-  // const [movies, setMovies] = useState([]);
 
   useEffect(() => {
     getSavedMovies()
       .then((data) => {
         setSavedMovies(data);
+        saveToLocalStorage('savedMovies', data);
       })
   }, [setSavedMovies])
 
