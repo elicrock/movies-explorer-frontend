@@ -1,5 +1,6 @@
 .movie {
   max-width: 270px;
+  aspect-ratio: 1/0.808;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -43,6 +44,10 @@
   font-size: 13px;
   font-weight: 500;
   line-height: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 206px;
 }
 
 .movie__duration {

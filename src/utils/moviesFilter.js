@@ -1,3 +1,5 @@
+import { SHORT_FILMS } from "./constants";
+
 export const filterMoviesByKeyword = (movies, keyword) => {
   const lowercaseKeyword = keyword.toLowerCase();
   return movies.filter((movie) => {
@@ -9,7 +11,7 @@ export const filterMoviesByKeyword = (movies, keyword) => {
 
 export const filterShortMovies = (movies, isChecked) => {
   if (isChecked) {
-    return movies.filter((movie) => movie.duration <= 40);
+    return movies.filter((movie) => movie.duration <= SHORT_FILMS);
   }
   return movies;
 };
