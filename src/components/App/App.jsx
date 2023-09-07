@@ -15,7 +15,7 @@ import { getUserInfo, register, authorize } from '../../utils/MainApi';
 import { handleError } from '../../utils/handleError';
 import * as mainApi from '../../utils/MainApi';
 import { BASE_URL } from '../../utils/constants';
-import { saveToLocalStorage } from '../../utils/localStorage';
+import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
 
 function App() {
 
@@ -97,6 +97,32 @@ function App() {
     });
   }
 
+
+  // async function handleDeleteMovie(movie) {
+  //   let movieId = movie._id;
+
+  //   if (!movieId && savedMovies.length > 0) {
+  //     const foundMovie = savedMovies.find((m) => m.movieId === movie.id);
+  //     if (foundMovie) {
+  //       movieId = foundMovie._id;
+  //     }
+  //   }
+
+  //   if (movieId) {
+  //     const savedMoviesFromLocalStorage = getFromLocalStorage('savedMovies') || [];
+  //     try {
+  //       await mainApi.deleteSavedMovie(movieId);
+  //       const updatedSavedMovies = savedMovies.filter((m) => m._id !== movieId);
+  //       setSavedMovies(updatedSavedMovies);
+  //       const updatedLocalStorageMovies = savedMoviesFromLocalStorage.filter((m) => m._id !== movieId);
+  //       saveToLocalStorage('savedMovies', updatedLocalStorageMovies);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+  // }
+
+
   function handleDeleteMovie(movie) {
     let movieId = movie._id;
 
@@ -108,11 +134,12 @@ function App() {
     }
 
     if (movieId) {
+      const savedMoviesFromLocalStorage = getFromLocalStorage('savedMovies') || [];
       mainApi
         .deleteSavedMovie(movieId)
         .then(() => {
-          setSavedMovies((movie) => movie.filter((m) => m._id !== movieId));
-          saveToLocalStorage('savedMovies', savedMovies.filter((m) => m._id !== movieId));
+          setSavedMovies(savedMovies.filter((m) => m._id !== movieId));
+          saveToLocalStorage('savedMovies', savedMoviesFromLocalStorage.filter((m) => m._id !== movieId));
         })
         .catch((error) => {
           console.error(error);

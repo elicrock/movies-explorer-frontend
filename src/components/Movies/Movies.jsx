@@ -37,7 +37,7 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
   useEffect(() => {
     const storageFilteredSearch = getFromLocalStorage('filtredSearch');
 
-    const savedMoviesFromLocalStorage = getFromLocalStorage('savedMovies') || [];
+    const savedMoviesFromLocalStorage = getFromLocalStorage('savedMovies');
     setSavedMovies(savedMoviesFromLocalStorage);
 
     if (storageFilteredSearch) {

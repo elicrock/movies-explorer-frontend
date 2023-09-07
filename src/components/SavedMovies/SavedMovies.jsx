@@ -4,7 +4,7 @@ import Header from '../Header/Header';
 import SearchForm from '../Movies/SearchForm/SearchForm';
 import MoviesCardList from '../Movies/MoviesCardList/MoviesCardList';
 import Footer from '../Footer/Footer';
-import { getSavedMovies } from '../../utils/MainApi';
+import { getSavedMovies, deleteSavedMovie } from '../../utils/MainApi';
 import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
 import { filterMoviesByKeyword, filterShortMovies } from '../../utils/moviesFilter';
 
@@ -18,7 +18,7 @@ function SavedMovies({ isLoggedIn, savedMovies, setSavedMovies, deleteMovie }) {
     setIsLoading(true);
     getSavedMovies()
       .then((data) => {
-        setSavedMovies(data);
+        setSavedMovies(data.reverse());
         saveToLocalStorage('savedMovies', data);
       })
       .catch(error => {
