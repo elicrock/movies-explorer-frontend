@@ -131,7 +131,7 @@ function App() {
               <ProtectedRoute element={Movies} isLoggedIn={isLoggedIn} saveMovie={handleSaveMovie} deleteMovie={handleDeleteMovie} />
             }/>
             <Route path="/saved-movies" element={
-              <ProtectedRoute element={SavedMovies} savedMovies={savedMovies} setSavedMovies={setSavedMovies} isLoggedIn={isLoggedIn} deleteMovie={handleDeleteMovie} />
+              <ProtectedRoute element={SavedMovies} isLoggedIn={isLoggedIn} savedMovies={savedMovies} setSavedMovies={setSavedMovies} deleteMovie={handleDeleteMovie} />
             }/>
             <Route path="/profile" element={
               <ProtectedRoute

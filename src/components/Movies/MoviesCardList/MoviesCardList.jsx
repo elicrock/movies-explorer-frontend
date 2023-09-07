@@ -20,7 +20,6 @@ function MoviesCardList({ movies, isLoading, error, saveMovie, deleteMovie }) {
               movie={movie}
               saveMovie={saveMovie}
               deleteMovie={deleteMovie}
-              movies={movies}
             />
           ))
         }

@@ -8,7 +8,7 @@ import { getSavedMovies } from '../../utils/MainApi';
 import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
 import { filterMoviesByKeyword, filterShortMovies } from '../../utils/moviesFilter';
 
-function SavedMovies({ savedMovies, setSavedMovies, isLoggedIn, deleteMovie }) {
+function SavedMovies({ isLoggedIn, savedMovies, setSavedMovies, deleteMovie }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState('');
