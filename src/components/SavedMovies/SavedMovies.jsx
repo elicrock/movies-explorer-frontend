@@ -4,7 +4,7 @@ import Header from '../Header/Header';
 import SearchForm from '../Movies/SearchForm/SearchForm';
 import MoviesCardList from '../Movies/MoviesCardList/MoviesCardList';
 import Footer from '../Footer/Footer';
-import { getSavedMovies, deleteSavedMovie } from '../../utils/MainApi';
+import { getSavedMovies } from '../../utils/MainApi';
 import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
 import { filterMoviesByKeyword, filterShortMovies } from '../../utils/moviesFilter';
 
