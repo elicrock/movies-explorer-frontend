@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import AuthForm from '../AuthForm/AuthForm';
 import './Login.css';
 import { useFormAndValidation } from '../../hooks/useFormAndValidation';
 
-function Login({ onLogin, isSubmitError }) {
+function Login({ isLoggedIn, onLogin, isSubmitError }) {
+
+
+
   const { values, handleChange, errors, isValid, resetForm, isButtonDisable } = useFormAndValidation();
 
   const handleSubmit = (e) => {
@@ -14,6 +18,11 @@ function Login({ onLogin, isSubmitError }) {
   useEffect(() => {
     resetForm();
   }, [resetForm]);
+
+
+  if (isLoggedIn) {
+    return <Navigate to="/movies" />;
+  }
 
   return (
     <AuthForm

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import '../App/App.css';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
@@ -20,7 +20,6 @@ import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorag
 function App() {
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [currentUser, setCurrentUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -97,32 +96,6 @@ function App() {
     });
   }
 
-
-  // async function handleDeleteMovie(movie) {
-  //   let movieId = movie._id;
-
-  //   if (!movieId && savedMovies.length > 0) {
-  //     const foundMovie = savedMovies.find((m) => m.movieId === movie.id);
-  //     if (foundMovie) {
-  //       movieId = foundMovie._id;
-  //     }
-  //   }
-
-  //   if (movieId) {
-  //     const savedMoviesFromLocalStorage = getFromLocalStorage('savedMovies') || [];
-  //     try {
-  //       await mainApi.deleteSavedMovie(movieId);
-  //       const updatedSavedMovies = savedMovies.filter((m) => m._id !== movieId);
-  //       setSavedMovies(updatedSavedMovies);
-  //       const updatedLocalStorageMovies = savedMoviesFromLocalStorage.filter((m) => m._id !== movieId);
-  //       saveToLocalStorage('savedMovies', updatedLocalStorageMovies);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }
-  // }
-
-
   function handleDeleteMovie(movie) {
     let movieId = movie._id;
 
@@ -144,12 +117,6 @@ function App() {
         .catch((error) => {
           console.error(error);
         });
-    }
-  }
-
-  if (location.pathname === '/signup' || location.pathname === '/signin') {
-    if (isLoggedIn) {
-      return <Navigate to="/movies" />;
     }
   }
 
@@ -177,8 +144,8 @@ function App() {
                 setIsSubmitError={setIsSubmitError}
               />
             }/>
-            <Route path="/signup" element={<Register onRegister={onRegister} isSubmitError={isSubmitError}/>}/>
-            <Route path="/signin" element={<Login onLogin={onLogin} isSubmitError={isSubmitError} />}/>
+            <Route path="/signup" element={<Register isLoggedIn={isLoggedIn} onRegister={onRegister} isSubmitError={isSubmitError}/>}/>
+            <Route path="/signin" element={<Login isLoggedIn={isLoggedIn} onLogin={onLogin} isSubmitError={isSubmitError} />}/>
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </CurrentUserContext.Provider>
