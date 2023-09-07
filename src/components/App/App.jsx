@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import '../App/App.css';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
@@ -20,6 +20,7 @@ import { saveToLocalStorage } from '../../utils/localStorage';
 function App() {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [currentUser, setCurrentUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -116,6 +117,12 @@ function App() {
         .catch((error) => {
           console.error(error);
         });
+    }
+  }
+
+  if (location.pathname === '/signup' || location.pathname === '/signin') {
+    if (isLoggedIn) {
+      return <Navigate to="/movies" />;
     }
   }
 
