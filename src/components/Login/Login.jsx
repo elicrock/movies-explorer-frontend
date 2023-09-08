@@ -8,10 +8,20 @@ import { EMAIL_REGEX } from '../../utils/constants';
 function Login({ isLoggedIn, onLogin, isSubmitError, setIsSubmitError }) {
   const { values, handleChange, errors, setErrors, isValid, resetForm } = useFormAndValidation();
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onLogin(values);
+    setIsSubmitting(true);
+
+    try {
+      await onLogin(values);
+      setIsSubmitting(false);
+      setIsFormValid(false);
+    } catch (error) {
+      setIsSubmitting(false);
+      setIsFormValid(false);
+    }
   };
 
   const handleChangeEmail = (e) => {
@@ -53,15 +63,16 @@ function Login({ isLoggedIn, onLogin, isSubmitError, setIsSubmitError }) {
       isValid={isValid}
       isFormValid={isFormValid}
       isSubmitError={isSubmitError}
+      isSubmitting={isSubmitting}
     >
       <label className="auth__label">
         E-mail
-        <input className="auth__input" name="email" type="email" placeholder="E-mail" minLength="2" maxLength="30" value={values.email || ''} onChange={handleChangeEmail} required />
+        <input className="auth__input" name="email" type="email" placeholder="E-mail" minLength="2" maxLength="30" value={values.email || ''} onChange={handleChangeEmail} required disabled={isSubmitting} />
         <span className={`auth__input-error email-error ${errors.email ? 'auth__input-error_active' : ''}`}>{errors.email}</span>
       </label>
       <label className="auth__label">
         Пароль
-        <input className="auth__input" name="password" type="password" placeholder="Пароль" minLength="2" maxLength="30" value={values.password || ''} onChange={handleChange} required />
+        <input className="auth__input" name="password" type="password" placeholder="Пароль" minLength="2" maxLength="30" value={values.password || ''} onChange={handleChange} required disabled={isSubmitting} />
         <span className={`auth__input-error password-error ${errors.password ? 'auth__input-error_active' : ''}`}>{errors.password}</span>
       </label>
     </AuthForm>

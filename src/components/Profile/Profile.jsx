@@ -18,6 +18,7 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdateSuccess, setIsUpdateSuccess] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChangeEmail = (e) => {
     handleChange(e);
@@ -53,23 +54,28 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
     setIsSubmitError('');
   }
 
-  const handleSubmit = (e) => {
-    setIsLoading(true);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    updateUserInfo(values.name, values.email)
-      .then((data) => {
-        setCurrentUser(data);
-        setIsSubmit(false);
-        if (data) {
-          setIsUpdateSuccess('Данные успешно обновлены');
-        }
-      })
-      .catch((err) => {
-        handleError(err, setIsSubmitError);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      })
+    setIsLoading(true);
+    setIsSubmitting(true);
+
+    try {
+      const data = await updateUserInfo(values.name, values.email);
+      setCurrentUser(data);
+      setIsSubmit(false);
+      setIsSubmitting(false);
+      setIsFormValid(false);
+
+      if (data) {
+        setIsUpdateSuccess('Данные успешно обновлены');
+      }
+    } catch (err) {
+      handleError(err, setIsSubmitError);
+      setIsSubmitting(false);
+      setIsFormValid(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -114,19 +120,19 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
           <div className="profile__inputs">
             <label className="profile__label">
               Имя
-              <input className="profile__input" name="name" type="text" placeholder="Имя" minLength="2" maxLength="30" value={values.name || ''} onChange={handleChangeName} required />
+              <input className="profile__input" name="name" type="text" placeholder="Имя" minLength="2" maxLength="30" value={values.name || ''} onChange={handleChangeName} disabled={isSubmitting} required />
             </label>
             <span className={`profile__input-error name-error ${errors.name ? 'profile__input-error_active' : ''}`}>{errors.name}</span>
             <label className="profile__label">
               E-mail
-              <input className="profile__input" name="email" type="email" placeholder="E-mail" minLength="2" maxLength="30" value={values.email || ''} onChange={handleChangeEmail} required />
+              <input className="profile__input" name="email" type="email" placeholder="E-mail" minLength="2" maxLength="30" value={values.email || ''} onChange={handleChangeEmail} required disabled={isSubmitting} />
             </label>
             <span className={`profile__input-error email-error ${errors.email ? 'profile__input-error_active' : ''}`}>{errors.email}</span>
           </div>
           <div className="profile__buttons-container">
             <span className={`profile__submit-error ${isUpdateSuccess || isSubmitError ? 'profile__submit-error_active' : ''}`}>{isUpdateSuccess || isSubmitError}</span>
             {isSubmit &&
-              <button type="submit" className={`profile__button-save ${!isFormValid || !initialValuesChanged ? 'profile__button-save_disabled' : ''}`} disabled={!isFormValid || !initialValuesChanged}>
+              <button type="submit" className={`profile__button-save ${!isFormValid || !initialValuesChanged || isSubmitting ? 'profile__button-save_disabled' : ''}`} disabled={!isFormValid || !initialValuesChanged || isSubmitting}>
                 {isLoading ? 'Сохранение' : 'Сохранить'}
               </button>
             }
