@@ -5,9 +5,6 @@ import './Login.css';
 import { useFormAndValidation } from '../../hooks/useFormAndValidation';
 
 function Login({ isLoggedIn, onLogin, isSubmitError }) {
-
-
-
   const { values, handleChange, errors, isValid, resetForm, isButtonDisable } = useFormAndValidation();
 
   const handleSubmit = (e) => {
@@ -18,7 +15,6 @@ function Login({ isLoggedIn, onLogin, isSubmitError }) {
   useEffect(() => {
     resetForm();
   }, [resetForm]);
-
 
   if (isLoggedIn) {
     return <Navigate to="/movies" />;

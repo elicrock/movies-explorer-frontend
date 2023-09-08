@@ -18,14 +18,13 @@ import { BASE_URL } from '../../utils/constants';
 import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
 
 function App() {
-
-  const navigate = useNavigate();
-
   const [currentUser, setCurrentUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSubmitError, setIsSubmitError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [savedMovies, setSavedMovies] = React.useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkToken();
@@ -91,8 +90,8 @@ function App() {
       setSavedMovies([newMovie, ...savedMovies]);
       saveToLocalStorage('savedMovies', [newMovie, ...savedMovies]);
     })
-    .catch(error => {
-      console.error(error);
+    .catch((err) => {
+      console.error(err);
     });
   }
 
@@ -114,8 +113,8 @@ function App() {
           setSavedMovies(savedMovies.filter((m) => m._id !== movieId));
           saveToLocalStorage('savedMovies', savedMoviesFromLocalStorage.filter((m) => m._id !== movieId));
         })
-        .catch((error) => {
-          console.error(error);
+        .catch((err) => {
+          console.error(err);
         });
     }
   }

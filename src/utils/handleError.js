@@ -16,7 +16,4 @@ export const handleError = (err, errorVariable, authForm) => {
   } else {
     errorVariable('Произошла непредвиденная ошибка!');
   }
-  // setTimeout(() => {
-  //   errorVariable('');
-  // }, 2000);
 }

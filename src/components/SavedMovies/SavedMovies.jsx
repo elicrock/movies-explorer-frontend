@@ -21,8 +21,8 @@ function SavedMovies({ isLoggedIn, savedMovies, setSavedMovies, deleteMovie }) {
         setSavedMovies(data.reverse());
         saveToLocalStorage('savedMovies', data);
       })
-      .catch(error => {
-        console.error(error);
+      .catch((err) => {
+        console.error(err);
       })
       .finally(() => {
         setIsLoading(false);

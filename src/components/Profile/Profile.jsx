@@ -23,6 +23,12 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
     setIsSubmitError('');
   }
 
+  const handleChangeResetError = (e) => {
+    handleChange(e);
+    setIsUpdateSuccess('');
+    setIsSubmitError('');
+  }
+
   const handleSubmit = (e) => {
     setIsLoading(true);
     e.preventDefault();
@@ -32,9 +38,6 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
         setIsSubmit(false);
         if (data) {
           setIsUpdateSuccess('Данные успешно обновлены');
-          // setTimeout(() => {
-          //   setIsUpdateSuccess('');
-          // }, 2000);
         }
       })
       .catch((err) => {
@@ -79,12 +82,12 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
           <div className="profile__inputs">
             <label className="profile__label">
               Имя
-              <input className="profile__input" name="name" type="text" placeholder="Имя" minLength="2" maxLength="30" value={values.name || ''} onChange={handleChange} required />
+              <input className="profile__input" name="name" type="text" placeholder="Имя" minLength="2" maxLength="30" value={values.name || ''} onChange={handleChangeResetError} required />
             </label>
             <span className={`profile__input-error name-error ${errors.name ? 'profile__input-error_active' : ''}`}>{errors.name}</span>
             <label className="profile__label">
               E-mail
-              <input className="profile__input" name="email" type="email" placeholder="E-mail" minLength="2" maxLength="30" value={values.email || ''} onChange={handleChange} required />
+              <input className="profile__input" name="email" type="email" placeholder="E-mail" minLength="2" maxLength="30" value={values.email || ''} onChange={handleChangeResetError} required />
             </label>
             <span className={`profile__input-error email-error ${errors.email ? 'profile__input-error_active' : ''}`}>{errors.email}</span>
           </div>

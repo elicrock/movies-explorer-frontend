@@ -35,7 +35,7 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
   }, [windowWidth, setVisibleMoviesCount]);
 
   useEffect(() => {
-    const storageFilteredSearch = getFromLocalStorage('filtredSearch');
+    const storageFilteredSearch = getFromLocalStorage('filteredSearch');
 
     const savedMoviesFromLocalStorage = getFromLocalStorage('savedMovies');
     setSavedMovies(savedMoviesFromLocalStorage);
@@ -70,7 +70,7 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
       if (storageSearch) {
         const filteredByKeyword = await filterMoviesByKeyword(storageSearch, searchQuery.trim());
         const filteredResult = await filterShortMovies(filteredByKeyword, isChecked);
-        saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
+        saveToLocalStorage('filteredSearch', { filteredResult, searchQuery, isChecked });
         setFilteredMovies(filteredResult);
         if (filteredResult.length === 0) {
           setError('Ничего не найдено');
@@ -87,7 +87,7 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
         saveToLocalStorage('allМovies', data);
         const filteredByKeyword = await filterMoviesByKeyword(data, searchQuery.trim());
         const filteredResult = await filterShortMovies(filteredByKeyword, isChecked);
-        saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
+        saveToLocalStorage('filteredSearch', { filteredResult, searchQuery, isChecked });
         setFilteredMovies(filteredResult);
         if (filteredResult.length === 0) {
           setError('Ничего не найдено');
@@ -108,7 +108,7 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
       const filteredByKeyword = filterMoviesByKeyword(storageSearch, searchQuery.trim());
       const filteredResult = filterShortMovies(filteredByKeyword, isChecked);
       setFilteredMovies(filteredResult);
-      saveToLocalStorage('filtredSearch', { filteredResult, searchQuery, isChecked });
+      saveToLocalStorage('filteredSearch', { filteredResult, searchQuery, isChecked });
       if (filteredResult.length === 0) {
         setError('Ничего не найдено');
       } else {
