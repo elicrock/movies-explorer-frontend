@@ -1,16 +1,37 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import AuthForm from '../AuthForm/AuthForm';
 import './Login.css';
 import { useFormAndValidation } from '../../hooks/useFormAndValidation';
+import { EMAIL_REGEX } from '../../utils/constants';
 
-function Login({ isLoggedIn, onLogin, isSubmitError }) {
-  const { values, handleChange, errors, isValid, resetForm, isButtonDisable } = useFormAndValidation();
+function Login({ isLoggedIn, onLogin, isSubmitError, setIsSubmitError }) {
+  const { values, handleChange, errors, setErrors, isValid, resetForm } = useFormAndValidation();
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onLogin(values);
   };
+
+  const handleChangeEmail = (e) => {
+    handleChange(e);
+    const { name, value } = e.target;
+    if (name === 'email') {
+      if (!EMAIL_REGEX.test(value)) {
+        setErrors({ ...errors, email: 'Введите корректный email: example@example.ru'});
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (errors.email) {
+      setIsFormValid(false);
+    } else {
+      setIsFormValid(true);
+    }
+    setIsSubmitError('');
+  }, [errors, setIsSubmitError]);
 
   useEffect(() => {
     resetForm();
@@ -30,12 +51,12 @@ function Login({ isLoggedIn, onLogin, isSubmitError }) {
       textLink="Регистрация"
       onSubmit={handleSubmit}
       isValid={isValid}
+      isFormValid={isFormValid}
       isSubmitError={isSubmitError}
-      isButtonDisable={isButtonDisable}
     >
       <label className="auth__label">
         E-mail
-        <input className="auth__input" name="email" type="email" placeholder="E-mail" minLength="2" maxLength="30" value={values.email || ''} onChange={handleChange} required />
+        <input className="auth__input" name="email" type="email" placeholder="E-mail" minLength="2" maxLength="30" value={values.email || ''} onChange={handleChangeEmail} required />
         <span className={`auth__input-error email-error ${errors.email ? 'auth__input-error_active' : ''}`}>{errors.email}</span>
       </label>
       <label className="auth__label">

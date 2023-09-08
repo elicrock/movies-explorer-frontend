@@ -143,8 +143,8 @@ function App() {
                 setIsSubmitError={setIsSubmitError}
               />
             }/>
-            <Route path="/signup" element={<Register isLoggedIn={isLoggedIn} onRegister={onRegister} isSubmitError={isSubmitError}/>}/>
-            <Route path="/signin" element={<Login isLoggedIn={isLoggedIn} onLogin={onLogin} isSubmitError={isSubmitError} />}/>
+            <Route path="/signup" element={<Register isLoggedIn={isLoggedIn} onRegister={onRegister} isSubmitError={isSubmitError} setIsSubmitError={setIsSubmitError} />}/>
+            <Route path="/signin" element={<Login isLoggedIn={isLoggedIn} onLogin={onLogin} isSubmitError={isSubmitError} setIsSubmitError={setIsSubmitError} />}/>
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </CurrentUserContext.Provider>

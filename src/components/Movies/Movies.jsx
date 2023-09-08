@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Movies.css';
 import Header from '../Header/Header';
 import SearchForm from './SearchForm/SearchForm';
@@ -10,7 +10,7 @@ import { getSavedMovies } from '../../utils/MainApi';
 import { filterMoviesByKeyword, filterShortMovies } from '../../utils/moviesFilter';
 import { saveToLocalStorage, getFromLocalStorage } from '../../utils/localStorage';
 import useResponsiveVisibleMoviesCount from '../../hooks/useResponsiveVisibleMoviesCount';
-import { SCREEN_1140, SCREEN_975, SCREEN_480, ADD_MOVIE_XL, ADD_MOVIE_LG, ADD_MOVIE_MD, ADD_MOVIE_SM } from '../../utils/constants';
+import { SCREEN_1140, SCREEN_975, SCREEN_480, INIT_MOVIE_XL, INIT_MOVIE_LG, INIT_MOVIE_MD, INIT_MOVIE_SM } from '../../utils/constants';
 
 function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
   const [movies, setMovies] = useState([]);
@@ -20,19 +20,8 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
   const [isLoading, setIsLoading] = useState(false);
   const [savedMovies, setSavedMovies] = useState([]);
   const [error, setError] = useState('');
-  const [visibleMoviesCount, setVisibleMoviesCount, windowWidth] = useResponsiveVisibleMoviesCount();
-
-  const loadMoreMovies = useCallback(() => {
-    if (windowWidth > SCREEN_1140) {
-      setVisibleMoviesCount((prevCount) => prevCount + ADD_MOVIE_XL);
-    } else if (windowWidth >= SCREEN_975 && windowWidth <= SCREEN_1140) {
-      setVisibleMoviesCount((prevCount) => prevCount + ADD_MOVIE_LG);
-    } else if (windowWidth > SCREEN_480 && windowWidth <= SCREEN_975) {
-      setVisibleMoviesCount((prevCount) => prevCount + ADD_MOVIE_MD);
-    } else if (windowWidth <= SCREEN_480) {
-      setVisibleMoviesCount((prevCount) => prevCount + ADD_MOVIE_SM);
-    }
-  }, [windowWidth, setVisibleMoviesCount]);
+  const [windowWidth] = useResponsiveVisibleMoviesCount();
+  const [visibleMoviesCount, setVisibleMoviesCount] = useState(INIT_MOVIE_XL);
 
   useEffect(() => {
     const storageFilteredSearch = getFromLocalStorage('filteredSearch');
@@ -48,6 +37,24 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
       setFilteredMovies([]);
     }
   }, [setSavedMovies, isChecked]);
+
+  useEffect(() => {
+    let initialVisibleMoviesCount = INIT_MOVIE_XL;
+
+    if (windowWidth > SCREEN_1140) {
+      initialVisibleMoviesCount = INIT_MOVIE_XL;
+    } else if (windowWidth >= SCREEN_975 && windowWidth <= SCREEN_1140) {
+      initialVisibleMoviesCount = INIT_MOVIE_LG;
+    } else if (windowWidth > SCREEN_480 && windowWidth <= SCREEN_975) {
+      initialVisibleMoviesCount = INIT_MOVIE_MD;
+    } else if (windowWidth <= SCREEN_480) {
+      initialVisibleMoviesCount = INIT_MOVIE_SM;
+    }
+
+    setTimeout(() => {
+      setVisibleMoviesCount(initialVisibleMoviesCount);
+    }, 0);
+  }, [windowWidth, searchQuery]);
 
   const isMovieSaved = (movie, savedMovies) => {
     return savedMovies.find(savedMovie => savedMovie.movieId === movie.id);
@@ -131,7 +138,7 @@ function Movies({ isLoggedIn, saveMovie, deleteMovie }) {
         />
         <MoviesCardList movies={moviesWithSavedFlag.slice(0, visibleMoviesCount)} isLoading={isLoading} error={error} saveMovie={saveMovie} deleteMovie={deleteMovie} />
 
-        {(!error && filteredMovies.length !== 0 && visibleMoviesCount < filteredMovies.length) && <MoviesMoreButton loadMore={loadMoreMovies} />}
+        {(!error && filteredMovies.length !== 0 && visibleMoviesCount < filteredMovies.length) && <MoviesMoreButton windowWidth={windowWidth} setVisibleMoviesCount={setVisibleMoviesCount} />}
       </main>
       <Footer />
     </>

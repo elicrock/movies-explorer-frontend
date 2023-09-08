@@ -15,6 +15,8 @@ const ADD_MOVIE_LG = 3;
 const ADD_MOVIE_MD = 2;
 const ADD_MOVIE_SM = 2;
 const BASE_URL = 'https://api.nomoreparties.co';
+const EMAIL_REGEX = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_]+\.[a-z]{2,6}$/i;
+const NAME_REGEX = /^[A-Za-zА-Яа-я\s-]+$/;
 
 export {
   BAD_REQUEST,
@@ -33,5 +35,7 @@ export {
   ADD_MOVIE_LG,
   ADD_MOVIE_MD,
   ADD_MOVIE_SM,
-  BASE_URL
+  BASE_URL,
+  EMAIL_REGEX,
+  NAME_REGEX
 };

@@ -6,25 +6,49 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { useFormAndValidation } from '../../hooks/useFormAndValidation';
 import { updateUserInfo, logout } from '../../utils/MainApi';
 import { handleError } from '../../utils/handleError';
+import { EMAIL_REGEX, NAME_REGEX } from '../../utils/constants';
 
 function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, setIsSubmitError }) {
   const currentUser = useContext(CurrentUserContext);
-  const { values, handleChange, errors, isValid, setValues, resetForm, isButtonDisable } = useFormAndValidation();
+  const { values, handleChange, errors, setErrors, setValues, resetForm } = useFormAndValidation();
 
   const initialValuesChanged = values.name !== currentUser.name || values.email !== currentUser.email;
 
   const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdateSuccess, setIsUpdateSuccess] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const handleChangeEmail = (e) => {
+    handleChange(e);
+    setIsUpdateSuccess('');
+    setIsSubmitError('');
+    const { name, value } = e.target;
+    if (name === 'email') {
+      if (!EMAIL_REGEX.test(value)) {
+        setErrors({ ...errors, email: 'Введите корректный email: example@example.ru'});
+      }
+    }
+  }
+
+  const handleChangeName = (e) => {
+    handleChange(e);
+    setIsUpdateSuccess('');
+    setIsSubmitError('');
+    const { name, value } = e.target;
+    if (name === 'name') {
+      if (!NAME_REGEX.test(value)) {
+        setErrors({ ...errors, [name]: 'Поле должно содержать только латиницу, кириллицу, пробел или дефис.'});
+      }
+    } else if (value.length < 2 || value.length < 30) {
+      setErrors({ ...errors, [name]: 'Поле должно содержать от 2 до 30 символов.'});
+    } else {
+      setErrors({ ...errors, [name]: '' });
+    }
+  }
 
   function handleSubmitClick() {
     setIsSubmit(!isSubmit);
-    setIsUpdateSuccess('');
-    setIsSubmitError('');
-  }
-
-  const handleChangeResetError = (e) => {
-    handleChange(e);
     setIsUpdateSuccess('');
     setIsSubmitError('');
   }
@@ -47,6 +71,14 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
         setIsLoading(false);
       })
   };
+
+  useEffect(() => {
+    if (errors.email || errors.name) {
+      setIsFormValid(false);
+    } else {
+      setIsFormValid(true);
+    }
+  }, [errors]);
 
   useEffect(() => {
     if (currentUser) {
@@ -82,19 +114,19 @@ function Profile({ isLoggedIn, setIsLoggedIn, setCurrentUser, isSubmitError, set
           <div className="profile__inputs">
             <label className="profile__label">
               Имя
-              <input className="profile__input" name="name" type="text" placeholder="Имя" minLength="2" maxLength="30" value={values.name || ''} onChange={handleChangeResetError} required />
+              <input className="profile__input" name="name" type="text" placeholder="Имя" minLength="2" maxLength="30" value={values.name || ''} onChange={handleChangeName} required />
             </label>
             <span className={`profile__input-error name-error ${errors.name ? 'profile__input-error_active' : ''}`}>{errors.name}</span>
             <label className="profile__label">
               E-mail
-              <input className="profile__input" name="email" type="email" placeholder="E-mail" minLength="2" maxLength="30" value={values.email || ''} onChange={handleChangeResetError} required />
+              <input className="profile__input" name="email" type="email" placeholder="E-mail" minLength="2" maxLength="30" value={values.email || ''} onChange={handleChangeEmail} required />
             </label>
             <span className={`profile__input-error email-error ${errors.email ? 'profile__input-error_active' : ''}`}>{errors.email}</span>
           </div>
           <div className="profile__buttons-container">
             <span className={`profile__submit-error ${isUpdateSuccess || isSubmitError ? 'profile__submit-error_active' : ''}`}>{isUpdateSuccess || isSubmitError}</span>
             {isSubmit &&
-              <button type="submit" className={`profile__button-save ${!isValid || isButtonDisable || !initialValuesChanged ? 'profile__button-save_disabled' : ''}`} disabled={!isValid || isButtonDisable || !initialValuesChanged}>
+              <button type="submit" className={`profile__button-save ${!isFormValid || !initialValuesChanged ? 'profile__button-save_disabled' : ''}`} disabled={!isFormValid || !initialValuesChanged}>
                 {isLoading ? 'Сохранение' : 'Сохранить'}
               </button>
             }
