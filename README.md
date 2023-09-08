@@ -8,4 +8,5 @@
 ---
 ## Ссылки проекта:
 * Макет - dark-5
-* В компоненте Header можно изменить стейт для отображения когда пользователь залогинен.
+* Pull request - https://github.com/elicrock/movies-explorer-frontend/pull/3
+* Site link - https://movies.rockelic.nomoreparties.co
