@@ -3,6 +3,24 @@
   margin: 0 auto;
   padding: 70px 70px 30px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.movies__error {
+  max-width: 600px;
+  color: #FF004C;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.movies__error_active {
+  opacity: 1;
 }
 
 .movies__list {

@@ -76,7 +76,7 @@
   color: #EE3465;
   font-size: 10px;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1;
   opacity: 0;
   transition: opacity 0.2s;
 }
@@ -91,6 +91,20 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
+}
+
+.auth__submit-error {
+  min-height: 16px;
+  color: #FF004C;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: normal;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.auth__submit-error_active {
+  opacity: 1;
 }
 
 .auth__button {
@@ -109,6 +123,12 @@
 
 .auth__button:hover {
   opacity: 0.8;
+}
+
+.auth__button_disabled {
+  color: #C2C2C2;
+  background: #F8F8F8;
+  pointer-events: none;
 }
 
 .auth__text-page {

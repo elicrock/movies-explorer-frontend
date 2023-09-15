@@ -1,0 +1,41 @@
+const BAD_REQUEST = 400;
+const UNAUTHORIZED = 401;
+const CONFLICT = 409;
+const INTERNAL_SERVER_ERROR = 500;
+const SHORT_FILMS = 40;
+const SCREEN_1140 = 1140;
+const SCREEN_975 = 975;
+const SCREEN_480 = 480;
+const INIT_MOVIE_XL = 16;
+const INIT_MOVIE_LG = 12;
+const INIT_MOVIE_MD = 8;
+const INIT_MOVIE_SM = 5;
+const ADD_MOVIE_XL = 4;
+const ADD_MOVIE_LG = 3;
+const ADD_MOVIE_MD = 2;
+const ADD_MOVIE_SM = 2;
+const BASE_URL = 'https://api.nomoreparties.co';
+const EMAIL_REGEX = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_]+\.[a-z]{2,6}$/i;
+const NAME_REGEX = /^[A-Za-zА-Яа-я\s-]+$/;
+
+export {
+  BAD_REQUEST,
+  UNAUTHORIZED,
+  CONFLICT,
+  INTERNAL_SERVER_ERROR,
+  SHORT_FILMS,
+  SCREEN_1140,
+  SCREEN_975,
+  SCREEN_480,
+  INIT_MOVIE_XL,
+  INIT_MOVIE_LG,
+  INIT_MOVIE_MD,
+  INIT_MOVIE_SM,
+  ADD_MOVIE_XL,
+  ADD_MOVIE_LG,
+  ADD_MOVIE_MD,
+  ADD_MOVIE_SM,
+  BASE_URL,
+  EMAIL_REGEX,
+  NAME_REGEX
+};
